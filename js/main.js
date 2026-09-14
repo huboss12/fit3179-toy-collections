@@ -1,0 +1,1 @@
+vegaEmbed('#vis1', 'specs/01_choropleth.json', {actions: false});
