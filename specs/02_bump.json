@@ -9,10 +9,13 @@
     "fontSize": 16,
     "subtitleFontSize": 11
   },
-  "data": {"url": "data/aus_imports.csv"},
+  "data": {
+    "url": "data/aus_imports.csv",
+    "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+    },
   "transform": [
     {"filter": "datum.PartnerISO3 != 'WLD'"},
-    {"filter": "indexof([1995, 2000, 2005, 2010, 2015, 2020, 2025], datum.Year) >= 0"},
+    {"filter": {"field": "Year", "oneOf": [1995, 2000, 2005, 2010, 2015, 2020, 2025]}},    
     {"calculate": "datum['TradeValue in 1000 USD']", "as": "value"},
     {
       "calculate": "datum.PartnerName == 'Other Asia, nes' ? 'Taiwan' : datum.PartnerName == 'Hong Kong, China' ? 'Hong Kong' : datum.PartnerName == 'Czech Republic' ? 'Czechia' : datum.PartnerName",
