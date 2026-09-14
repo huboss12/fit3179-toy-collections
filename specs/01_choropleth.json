@@ -1,0 +1,70 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 400,
+  "title": {
+    "text": "China makes most of the world's toys",
+    "subtitle": "Toy exports by country, 2024 (HS 9503). Source: UN Comtrade via WITS",
+    "anchor": "start"
+  },
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    {
+      "data": {"sphere": true},
+      "mark": {"type": "geoshape", "fill": "#eaf2f5"}
+    },
+    {
+      "data": {
+        "url": "data/world-110m.json",
+        "format": {"type": "topojson", "feature": "countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "#e8e8e4", "stroke": "#ffffff", "strokeWidth": 0.5}
+    },
+    {
+      "data": {"url": "data/world_exports.csv"},
+      "transform": [
+        {"filter": "datum.Year == 2024"},
+        {"filter": "datum.ReporterISO3 != 'EUN'"},
+        {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "value_m"},
+        {
+          "lookup": "ReporterISO3",
+          "from": {
+            "data": {"url": "data/country_lookup.csv"},
+            "key": "code",
+            "fields": ["id", "name"]
+          }
+        },
+        {
+          "lookup": "id",
+          "from": {
+            "data": {
+              "url": "data/world-110m.json",
+              "format": {"type": "topojson", "feature": "countries"}
+            },
+            "key": "id"
+          },
+          "as": "geo"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
+      "encoding": {
+        "shape": {"field": "geo", "type": "geojson"},
+        "color": {
+          "field": "value_m",
+          "type": "quantitative",
+          "title": "Exports (US$ million)",
+          "scale": {
+            "type": "threshold",
+            "domain": [10, 100, 500, 2000, 10000],
+            "range": ["#fee8c8", "#fdd0a2", "#fdae6b", "#e6550d", "#a63603", "#5c1a00"]
+          },
+          "legend": {"orient": "bottom-left", "direction": "horizontal"}
+        },
+        "tooltip": [
+          {"field": "name", "type": "nominal", "title": "Country"},
+          {"field": "value_m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
+        ]
+      }
+    }
+  ]
+}
