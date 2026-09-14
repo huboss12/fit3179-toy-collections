@@ -11,10 +11,7 @@
   },
   "projection": {"type": "equalEarth"},
   "layer": [
-    {
-      "data": {"sphere": true},
-      "mark": {"type": "geoshape", "fill": "#eaf2f5"}
-    },
+    
     {
       "data": {
         "url": "data/world-110m.json",
@@ -68,7 +65,7 @@
                 "columns": 6,
                 "labelFontSize": 10,
                 "titleFontSize": 11,
-                "offset": 60
+                "offset": 10
             }
             },
         "tooltip": [
