@@ -78,7 +78,7 @@
         {"joinaggregate": [{"op": "max", "field": "Year", "as": "lastYear"}], "groupby": ["country"]},
         {"filter": "datum.Year == datum.lastYear"}
       ],
-      "mark": {"type": "text", "align": "left", "dx": 10, "fontSize": 11, "fontWeight": "bold", "stroke": "white", "strokeWidth": 3, "fillOpacity": 1, "strokeOpacity": 1, "paintOrder": "stroke"},
+      "mark": {"type": "text", "align": "left", "dx": 10, "fontSize": 11, "fontWeight": "bold"},
       "encoding": {"text": {"field": "country", "type": "nominal"}}
     }
   ]
