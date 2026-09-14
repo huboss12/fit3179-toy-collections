@@ -5,7 +5,9 @@
   "title": {
     "text": "China makes most of the world's toys",
     "subtitle": "Toy exports by country, 2024 (HS 9503). Source: UN Comtrade via WITS",
-    "anchor": "start"
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11
   },
   "projection": {"type": "equalEarth"},
   "layer": [
@@ -52,18 +54,45 @@
         "color": {
           "field": "value_m",
           "type": "quantitative",
-          "title": "Exports (US$ million)",
+          "title": "Toy exports (US$)",
           "scale": {
             "type": "threshold",
             "domain": [10, 100, 500, 2000, 10000],
             "range": ["#fee8c8", "#fdd0a2", "#fdae6b", "#e6550d", "#a63603", "#5c1a00"]
           },
-          "legend": {"orient": "bottom-left", "direction": "horizontal"}
+          "legend": {
+            "orient": "none",
+            "legendX": 10,
+            "legendY": 340,
+            "direction": "horizontal",
+            "gradientLength": 300,
+            "gradientThickness": 12,
+            "values": [10, 100, 500, 2000, 10000],
+            "labelExpr": "datum.value >= 1000 ? datum.value / 1000 + 'bn' : datum.value + 'm'",
+            "labelFontSize": 10
+          }
         },
         "tooltip": [
           {"field": "name", "type": "nominal", "title": "Country"},
           {"field": "value_m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
         ]
+      }
+    },
+    {
+      "data": {"values": [{"lon": 103.9, "lat": 36.6}]},
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 35,
+        "dy": -55,
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "lineHeight": 13,
+        "text": ["China: US$39.9bn", "64% of world exports"]
+      },
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"}
       }
     }
   ]
