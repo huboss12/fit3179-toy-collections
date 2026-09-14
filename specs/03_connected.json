@@ -1,0 +1,60 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 620,
+  "height": 360,
+  "title": {
+    "text": "Bigger market, then a loosening grip",
+    "subtitle": "Australia's total toy imports vs the share coming from China, 1995–2025. Source: UN Comtrade via WITS",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11
+  },
+  "data": {
+    "url": "data/aus_imports.csv",
+    "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+  },
+  "transform": [
+    {"filter": {"field": "PartnerISO3", "oneOf": ["WLD", "CHN"]}},
+    {"calculate": "datum['TradeValue in 1000 USD']", "as": "value"},
+    {"pivot": "PartnerISO3", "value": "value", "groupby": ["Year"]},
+    {"calculate": "datum.WLD / 1000", "as": "total_m"},
+    {"calculate": "100 * datum.CHN / datum.WLD", "as": "china_pct"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "total_m",
+      "type": "quantitative",
+      "title": "Total toy imports (US$ million)",
+      "scale": {"domain": [150, 1550]},
+      "axis": {"grid": true, "gridColor": "#eeeeec", "domain": false, "ticks": false, "labelFontSize": 11}
+    },
+    "y": {
+      "field": "china_pct",
+      "type": "quantitative",
+      "title": "Share made in China (%)",
+      "scale": {"domain": [55, 90]},
+      "axis": {"grid": true, "gridColor": "#eeeeec", "domain": false, "ticks": false, "labelFontSize": 11}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "order": true, "strokeWidth": 2, "color": "#a63603", "opacity": 0.75},
+      "encoding": {"order": {"field": "Year", "type": "quantitative"}}
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 55, "color": "#a63603"},
+      "encoding": {
+        "tooltip": [
+          {"field": "Year", "type": "quantitative", "format": "d"},
+          {"field": "total_m", "type": "quantitative", "title": "Imports (US$m)", "format": ",.0f"},
+          {"field": "china_pct", "type": "quantitative", "title": "China share (%)", "format": ".1f"}
+        ]
+      }
+    },
+    {
+      "transform": [{"filter": {"field": "Year", "oneOf": [1995, 2005, 2018, 2025]}}],
+      "mark": {"type": "text", "align": "left", "dx": 9, "dy": -6, "fontSize": 11, "fontWeight": "bold", "color": "#5c1a00"},
+      "encoding": {"text": {"field": "Year", "type": "quantitative", "format": "d"}}
+    }
+  ]
+}
