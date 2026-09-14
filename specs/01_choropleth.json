@@ -28,6 +28,7 @@
         {"filter": "datum.Year == 2024"},
         {"filter": "datum.ReporterISO3 != 'EUN'"},
         {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "value_m"},
+        {"calculate": "datum.value_m < 10 ? 'Under $10m' : datum.value_m < 100 ? '$10m–$100m' : datum.value_m < 500 ? '$100m–$500m' : datum.value_m < 2000 ? '$500m–$2bn' : datum.value_m < 10000 ? '$2bn–$10bn' : 'Over $10bn'", "as": "band"},
         {
           "lookup": "ReporterISO3",
           "from": {
@@ -52,26 +53,24 @@
       "encoding": {
         "shape": {"field": "geo", "type": "geojson"},
         "color": {
-          "field": "value_m",
-          "type": "quantitative",
-          "title": "Toy exports (US$)",
-          "scale": {
-            "type": "threshold",
-            "domain": [10, 100, 500, 2000, 10000],
-            "range": ["#fee8c8", "#fdd0a2", "#fdae6b", "#e6550d", "#a63603", "#5c1a00"]
-          },
-          "legend": {
-            "type": "symbol",
-            "orient": "bottom-left",
-            "direction": "horizontal",
-            "symbolType": "square",
-            "symbolSize": 220,
-            "labelExpr": "datum.value >= 1000 ? datum.value / 1000 + 'bn' : datum.value + 'm'",
-            "labelFontSize": 10,
-            "titleFontSize": 11,
-            "offset": 12
+            "field": "band",
+            "type": "ordinal",
+            "title": "Toy exports (US$)",
+            "scale": {
+                "domain": ["Under $10m", "$10m–$100m", "$100m–$500m", "$500m–$2bn", "$2bn–$10bn", "Over $10bn"],
+                "range": ["#fee8c8", "#fdd0a2", "#fdae6b", "#e6550d", "#a63603", "#5c1a00"]
+            },
+            "legend": {
+                "orient": "bottom-left",
+                "direction": "horizontal",
+                "symbolType": "square",
+                "symbolSize": 200,
+                "columns": 6,
+                "labelFontSize": 10,
+                "titleFontSize": 11,
+                "offset": 10
             }
-        },
+            },
         "tooltip": [
           {"field": "name", "type": "nominal", "title": "Country"},
           {"field": "value_m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
