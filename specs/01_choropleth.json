@@ -61,16 +61,16 @@
             "range": ["#fee8c8", "#fdd0a2", "#fdae6b", "#e6550d", "#a63603", "#5c1a00"]
           },
           "legend": {
-            "orient": "bottom",
+            "type": "symbol",
+            "orient": "bottom-left",
             "direction": "horizontal",
-            "gradientLength": 380,
-            "gradientThickness": 12,
-            "values": [10, 100, 500, 2000, 10000],
+            "symbolType": "square",
+            "symbolSize": 220,
             "labelExpr": "datum.value >= 1000 ? datum.value / 1000 + 'bn' : datum.value + 'm'",
             "labelFontSize": 10,
-            "labelOverlap": false,
-            "titleFontSize": 11
-}
+            "titleFontSize": 11,
+            "offset": 12
+            }
         },
         "tooltip": [
           {"field": "name", "type": "nominal", "title": "Country"},
