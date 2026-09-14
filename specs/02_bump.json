@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 760,
+  "height": 320,
+  "title": {
+    "text": "China never moved. Everything below it did.",
+    "subtitle": "Rank of Australia's toy import sources, 1995–2025. Source: UN Comtrade via WITS",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11
+  },
+  "data": {"url": "data/aus_imports.csv"},
+  "transform": [
+    {"filter": "datum.PartnerISO3 != 'WLD'"},
+    {"filter": "indexof([1995, 2000, 2005, 2010, 2015, 2020, 2025], datum.Year) >= 0"},
+    {"calculate": "datum['TradeValue in 1000 USD']", "as": "value"},
+    {
+      "calculate": "datum.PartnerName == 'Other Asia, nes' ? 'Taiwan' : datum.PartnerName == 'Hong Kong, China' ? 'Hong Kong' : datum.PartnerName == 'Czech Republic' ? 'Czechia' : datum.PartnerName",
+      "as": "country"
+    },
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "sort": [{"field": "value", "order": "descending"}],
+      "groupby": ["Year"]
+    },
+    {
+      "joinaggregate": [{"op": "min", "field": "rank", "as": "best"}],
+      "groupby": ["country"]
+    },
+    {"filter": "datum.best <= 3"},
+    {"filter": "datum.rank <= 8"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": null,
+      "axis": {"labelFontSize": 11, "grid": true, "gridColor": "#eeeeec", "domain": false, "ticks": false}
+    },
+    "y": {
+      "field": "rank",
+      "type": "quantitative",
+      "title": "Rank",
+      "scale": {"domain": [1, 8], "reverse": true},
+      "axis": {"values": [1, 2, 3, 4, 5, 6, 7, 8], "labelFontSize": 11, "grid": false, "domain": false, "ticks": false}
+    },
+    "color": {
+      "field": "country",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+        "domain": ["China", "Vietnam", "Denmark", "Czechia", "Hong Kong", "United States", "Indonesia"],
+        "range": ["#a63603", "#1d9e75", "#185fa5", "#6baed6", "#9e9e9e", "#c9a227", "#b45cb0"]
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "strokeWidth": 2.5, "interpolate": "monotone"},
+      "encoding": {"detail": {"field": "country", "type": "nominal"}}
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 70},
+      "encoding": {
+        "tooltip": [
+          {"field": "country", "type": "nominal", "title": "Country"},
+          {"field": "Year", "type": "ordinal"},
+          {"field": "rank", "type": "quantitative", "title": "Rank"},
+          {"field": "value", "type": "quantitative", "title": "US$ thousand", "format": ",.0f"}
+        ]
+      }
+    },
+    {
+      "transform": [
+        {"joinaggregate": [{"op": "max", "field": "Year", "as": "lastYear"}], "groupby": ["country"]},
+        {"filter": "datum.Year == datum.lastYear"}
+      ],
+      "mark": {"type": "text", "align": "left", "dx": 10, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {"text": {"field": "country", "type": "nominal"}}
+    }
+  ]
+}
