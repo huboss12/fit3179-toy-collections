@@ -52,9 +52,18 @@
       }
     },
     {
-      "transform": [{"filter": {"field": "Year", "oneOf": [1995, 2005, 2018, 2025]}}],
+      "transform": [{"filter": {"field": "Year", "oneOf": [1995, 2005, 2013, 2018, 2025]}}],
       "mark": {"type": "text", "align": "left", "dx": 9, "dy": -6, "fontSize": 11, "fontWeight": "bold", "color": "#5c1a00"},
       "encoding": {"text": {"field": "Year", "type": "quantitative", "format": "d"}}
+    }
+    ,{
+      "data": {"values": [{"x": 1180, "y": 87, "label": "After 2018, imports kept growing but China's share fell as Vietnam took over"}]},
+      "mark": {"type": "text", "align": "right", "fontSize": 11, "lineBreak": "|", "color": "#5c1a00"},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label"}
+      }
     }
   ]
 }
