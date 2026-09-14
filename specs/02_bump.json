@@ -88,11 +88,13 @@
         "strokeWidth": 3,
         "paintOrder": "stroke"
         },      
-        "encoding": {"text": {"field": "country", "type": "nominal"}, 
-    "dy": {
-  "condition": {"test": "datum.country == 'Hong Kong'", "value": -14},
-  "value": 0
-}}
+        "encoding": {
+            "text": {"field": "country", "type": "nominal"},
+            "yOffset": {
+                "condition": {"test": "datum.country == 'Hong Kong'", "value": -14},
+                "value": 0
+            }
+            }
     }
   ]
 }
