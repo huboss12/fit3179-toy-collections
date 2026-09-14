@@ -76,22 +76,21 @@
     {
       "transform": [
         {"joinaggregate": [{"op": "max", "field": "Year", "as": "lastYear"}], "groupby": ["country"]},
-        {"filter": "datum.Year == datum.lastYear"}
+        {"filter": "datum.Year == datum.lastYear"},
+        {"filter": "datum.country != 'Hong Kong'"}
       ],
-        "mark": {
-        "type": "text",
-        "align": "left",
-        "dx": 10,
-        "fontSize": 11,
-        "fontWeight": "bold"
-        },      
-        "encoding": {
-            "text": {"field": "country", "type": "nominal"},
-            "yOffset": {
-                "condition": {"test": "datum.country == 'Hong Kong'", "value": -14},
-                "value": 0
-            }
-            }
+      "mark": {"type": "text", "align": "left", "dx": 10, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {"text": {"field": "country", "type": "nominal"}}
+    },
+    {
+      "transform": [
+        {"joinaggregate": [{"op": "max", "field": "Year", "as": "lastYear"}], "groupby": ["country"]},
+        {"filter": "datum.Year == datum.lastYear"},
+        {"filter": "datum.country == 'Hong Kong'"}
+      ],
+      "mark": {"type": "text", "align": "right", "dx": -10, "fontSize": 11, "fontWeight": "bold"},
+      "encoding": {"text": {"field": "country", "type": "nominal"}}
     }
+
   ]
 }
