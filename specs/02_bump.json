@@ -83,10 +83,7 @@
         "align": "left",
         "dx": 10,
         "fontSize": 11,
-        "fontWeight": "bold",
-        "stroke": "white",
-        "strokeWidth": 3,
-        "paintOrder": "stroke"
+        "fontWeight": "bold"
         },      
         "encoding": {
             "text": {"field": "country", "type": "nominal"},
