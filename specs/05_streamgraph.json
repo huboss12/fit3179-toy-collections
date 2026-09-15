@@ -26,6 +26,7 @@
       "field": "Year",
       "type": "quantitative",
       "title": null,
+      "scale": {"domain": [1995, 2025], "nice": false},
       "axis": {"format": "d", "grid": false, "domain": false, "tickCount": 7, "labelFontSize": 11}
     },
     "y": {"field": "m", "type": "quantitative", "stack": "center", "title": null, "axis": null},
