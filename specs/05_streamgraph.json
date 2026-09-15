@@ -20,8 +20,10 @@
     {"calculate": "indexof(['Vietnam','Denmark','United States','Hong Kong','Taiwan','Indonesia','Thailand','Czechia','Germany'], datum.country) >= 0 ? datum.country : 'All others'", "as": "src"},
     {"aggregate": [{"op": "sum", "field": "value_m", "as": "m"}], "groupby": ["Year", "src"]}
   ],
-  "mark": {"type": "area", "interpolate": "monotone", "stroke": "white", "strokeWidth": 0.4},
-  "encoding": {
+  "layer": [
+    {
+    "mark": {"type": "area", "interpolate": "monotone", "stroke": "white", "strokeWidth": 0.4},
+    "encoding": {
     "x": {
       "field": "Year",
       "type": "quantitative",
@@ -44,6 +46,20 @@
       {"field": "src", "type": "nominal", "title": "Source"},
       {"field": "Year", "type": "quantitative", "format": "d"},
       {"field": "m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
-    ]
-  }
+        ]
+    }
+    },
+    {
+      "data": {"values": [
+        {"x": 2013, "y": 90, "t": "Denmark and Czechia peak together|— LEGO's European plants"},
+        {"x": 2023, "y": -90, "t": "Vietnam arrives|from nothing"}
+      ]},
+      "mark": {"type": "text", "fontSize": 11, "fontWeight": "bold", "lineBreak": "|", "color": "#333", "align": "center"},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative", "axis": null},
+        "text": {"field": "t"}
+      }
+    }
+  ]
 }
