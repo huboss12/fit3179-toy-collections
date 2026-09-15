@@ -49,21 +49,28 @@
         ]
     }
     },
-        {
-      "data": {"values": [{"x": 2013, "y": 128, "t": "Denmark and Czechia peak|— LEGO's European plants"}]},
-      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "white", "align": "center", "lineHeight": 13},
+            {
+      "data": {"values": [
+        {"x": 2013, "y": 190, "x2": 2007, "y2": 300, "t": "Denmark and Czechia peak|— LEGO's European plants"},
+        {"x": 2022, "y": 211, "x2": 2019, "y2": 330, "t": "Vietnam arrives|from nothing"}
+      ]},
+      "mark": {"type": "rule", "color": "#666", "strokeWidth": 0.8},
       "encoding": {
         "x": {"field": "x", "type": "quantitative"},
         "y": {"field": "y", "type": "quantitative"},
-        "text": {"field": "t"}
+        "x2": {"field": "x2"},
+        "y2": {"field": "y2"}
       }
     },
     {
-      "data": {"values": [{"x": 2022, "y": 203, "t": "Vietnam arrives|from nothing"}]},
-      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "white", "align": "center", "lineHeight": 13},
+      "data": {"values": [
+        {"x2": 2007, "y2": 300, "t": "Denmark and Czechia peak|— LEGO's European plants"},
+        {"x2": 2019, "y2": 330, "t": "Vietnam arrives|from nothing"}
+      ]},
+      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "#222", "align": "center", "dy": -12, "lineHeight": 13},
       "encoding": {
-        "x": {"field": "x", "type": "quantitative"},
-        "y": {"field": "y", "type": "quantitative"},
+        "x": {"field": "x2", "type": "quantitative"},
+        "y": {"field": "y2", "type": "quantitative"},
         "text": {"field": "t"}
       }
     }
