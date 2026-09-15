@@ -49,15 +49,21 @@
         ]
     }
     },
-    {
-      "data": {"values": [
-        {"x": 2013, "y": 90, "t": "Denmark and Czechia peak together|— LEGO's European plants"},
-        {"x": 2023, "y": -90, "t": "Vietnam arrives|from nothing"}
-      ]},
-      "mark": {"type": "text", "fontSize": 11, "fontWeight": "bold", "lineBreak": "|", "color": "#333", "align": "center"},
+        {
+      "data": {"values": [{"x": 2013, "y": 128, "t": "Denmark and Czechia peak|— LEGO's European plants"}]},
+      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "white", "align": "center", "lineHeight": 13},
       "encoding": {
         "x": {"field": "x", "type": "quantitative"},
-        "y": {"field": "y", "type": "quantitative", "axis": null},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "t"}
+      }
+    },
+    {
+      "data": {"values": [{"x": 2022, "y": 203, "t": "Vietnam arrives|from nothing"}]},
+      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "white", "align": "center", "lineHeight": 13},
+      "encoding": {
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
         "text": {"field": "t"}
       }
     }
