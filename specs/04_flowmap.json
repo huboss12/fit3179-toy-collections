@@ -13,6 +13,7 @@
   "layer": [
     {
       "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
+      "transform": [{"filter": "datum.id != 10"}],
       "mark": {"type": "geoshape", "fill": "#ebebe7", "stroke": "#ffffff", "strokeWidth": 0.5}
     },
     {
@@ -49,8 +50,16 @@
           "field": "value_m",
           "type": "quantitative",
           "scale": {"type": "sqrt", "range": [0.8, 14]},
-          "legend": {"title": "Imports (US$m)", "orient": "bottom-left", "titleFontSize": 11, "labelFontSize": 10}
-        },
+          "legend": {
+            "title": "Imports (US$m)",
+            "orient": "bottom-left",
+            "direction": "horizontal",
+            "symbolType": "stroke",
+            "values": [10, 100, 500, 1000],
+            "titleFontSize": 11,
+            "labelFontSize": 10
+          }
+            },
         "tooltip": [
           {"field": "name", "type": "nominal", "title": "From"},
           {"field": "value_m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
@@ -65,5 +74,14 @@
         "latitude": {"field": "lat", "type": "quantitative"}
       }
     }
+    ,{
+  "data": {"values": [{"lon": 103.865, "lat": 36.609, "label": "China: 81% of Australia's toy imports"}]},
+  "mark": {"type": "text", "align": "left", "dx": 12, "dy": -8, "fontSize": 11, "fontWeight": "bold", "color": "#5c1a00"},
+  "encoding": {
+    "longitude": {"field": "lon", "type": "quantitative"},
+    "latitude": {"field": "lat", "type": "quantitative"},
+    "text": {"field": "label"}
+  }
+}
   ]
 }
