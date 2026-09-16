@@ -1,12 +1,11 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "description": "Heatmap of LEGO theme groups by decade, as a share of each decade's sets",
-  "width": 420,
+  "width": 380,
   "height": 460,
   "title": {
     "text": "A third of LEGO sets now carry someone else's brand",
-    "subtitle": "Share of each decade's LEGO sets by theme group. 2020s covers 2020–2025 only. Source: Brickset",
-    "anchor": "start",
+    "subtitle": "Share of each decade's LEGO sets by theme group. Blank cells mean no sets; \"Miscellaneous\" is Brickset's residual category. 2020s covers 2020–2025 only. Source: Brickset",    "anchor": "start",
     "fontSize": 16,
     "subtitleFontSize": 11,
     "subtitleColor": "#555"
@@ -58,6 +57,31 @@
       "encoding": {
         "text": {"field": "pct", "type": "quantitative", "format": ".0f"},
         "color": {"condition": {"test": "datum.pct > 18", "value": "white"}, "value": "#555"}
+      }
+    }
+        ,{
+      "data": {"values": [
+        {"themeGroup": "Licensed", "decade": 2010},
+        {"themeGroup": "Licensed", "decade": 2020},
+        {"themeGroup": "Basic", "decade": 1970},
+        {"themeGroup": "Basic", "decade": 2020}
+      ]},
+      "mark": {"type": "rect", "fill": null, "stroke": "#111", "strokeWidth": 1.8},
+      "encoding": {
+        "x": {"field": "decade", "type": "ordinal"},
+        "y": {"field": "themeGroup", "type": "nominal"}
+      }
+    },
+    {
+      "data": {"values": [
+        {"themeGroup": "Licensed", "decade": 2020, "t": "Star Wars, Harry Potter, Marvel"},
+        {"themeGroup": "Basic", "decade": 2020, "t": "Plain brick sets almost gone"}
+      ]},
+      "mark": {"type": "text", "align": "left", "dx": 26, "fontSize": 10, "fontWeight": "bold", "color": "#111"},
+      "encoding": {
+        "x": {"field": "decade", "type": "ordinal"},
+        "y": {"field": "themeGroup", "type": "nominal"},
+        "text": {"field": "t", "type": "nominal"}
       }
     }
   ]
