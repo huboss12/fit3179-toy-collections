@@ -1,0 +1,64 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Heatmap of LEGO theme groups by decade, as a share of each decade's sets",
+  "width": 420,
+  "height": 460,
+  "title": {
+    "text": "A third of LEGO sets now carry someone else's brand",
+    "subtitle": "Share of each decade's LEGO sets by theme group. 2020s covers 2020–2025 only. Source: Brickset",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "data": {"url": "data/lego_sets.csv", "format": {"parse": {"year": "number"}}},
+  "transform": [
+    {"filter": "datum.themeGroup != null && datum.themeGroup != ''"},
+    {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
+    {"aggregate": [{"op": "count", "as": "n"}], "groupby": ["themeGroup", "decade"]},
+    {"joinaggregate": [{"op": "sum", "field": "n", "as": "decTotal"}], "groupby": ["decade"]},
+    {"calculate": "100 * datum.n / datum.decTotal", "as": "pct"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "decade",
+      "type": "ordinal",
+      "title": null,
+      "axis": {"labelAngle": 0, "labelExpr": "datum.value + 's'", "orient": "top", "domain": false, "ticks": false, "labelFontSize": 11, "labelFontWeight": "bold"}
+    },
+    "y": {
+      "field": "themeGroup",
+      "type": "nominal",
+      "title": null,
+      "sort": ["Vintage", "Junior", "Basic", "Historical", "Pre-school", "Educational", "Technical", "Girls", "Modern day", "Action/Adventure", "Racing", "Miscellaneous", "Constraction", "Model making", "Licensed", "Art and crafts"],
+      "axis": {"domain": false, "ticks": false, "labelFontSize": 11}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "rect", "stroke": "white", "strokeWidth": 1},
+      "encoding": {
+        "color": {
+          "field": "pct",
+          "type": "quantitative",
+          "title": "% of the decade's sets",
+          "scale": {"scheme": "oranges", "domain": [0, 35]},
+          "legend": {"orient": "bottom", "gradientLength": 180, "titleFontSize": 11, "labelFontSize": 10}
+        },
+        "tooltip": [
+          {"field": "themeGroup", "type": "nominal", "title": "Theme group"},
+          {"field": "decade", "type": "ordinal", "title": "Decade"},
+          {"field": "n", "type": "quantitative", "title": "Sets"},
+          {"field": "pct", "type": "quantitative", "title": "% of decade", "format": ".1f"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 9},
+      "encoding": {
+        "text": {"field": "pct", "type": "quantitative", "format": ".0f"},
+        "color": {"condition": {"test": "datum.pct > 18", "value": "white"}, "value": "#555"}
+      }
+    }
+  ]
+}
