@@ -1,0 +1,75 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 780,
+  "height": 400,
+  "title": {
+    "text": "Czechia has no toy industry. It has a LEGO factory.",
+    "subtitle": "The LEGO Group's seven manufacturing sites, sized by what Australia imported from that country in 2025. Sources: LEGO Group; UN Comtrade via WITS",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "projection": {"type": "naturalEarth1"},
+  "layer": [
+    {
+      "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
+      "transform": [{"filter": "datum.id != 10"}],
+      "mark": {"type": "geoshape", "fill": "#ebebe7", "stroke": "#ffffff", "strokeWidth": 0.5}
+    },
+    {
+      "data": {
+        "url": "data/aus_imports.csv",
+        "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+      },
+      "transform": [
+        {"filter": "datum.Year == 2025"},
+        {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "au_m"},
+        {
+          "lookup": "PartnerISO3",
+          "from": {
+            "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
+            "key": "code",
+            "fields": ["plant", "city", "lon", "lat", "status"]
+          }
+        },
+        {"filter": "datum.plant != null"}
+      ],
+      "mark": {"type": "circle", "opacity": 0.85, "stroke": "white", "strokeWidth": 1},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "size": {
+          "field": "au_m",
+          "type": "quantitative",
+          "title": "Australia's imports (US$m)",
+          "scale": {"type": "sqrt", "range": [50, 950]},
+          "legend": {"orient": "bottom-left", "values": [10, 100, 1000], "titleFontSize": 11, "labelFontSize": 10}
+        },
+        "color": {
+          "field": "status",
+          "type": "nominal",
+          "title": null,
+          "scale": {"domain": ["operating", "under construction"], "range": ["#a63603", "#bdbdbd"]},
+          "legend": {"orient": "bottom-left", "labelFontSize": 10}
+        },
+        "tooltip": [
+          {"field": "plant", "type": "nominal", "title": "Plant"},
+          {"field": "city", "type": "nominal", "title": "City"},
+          {"field": "PartnerName", "type": "nominal", "title": "Country"},
+          {"field": "au_m", "type": "quantitative", "title": "AU imports (US$m)", "format": ",.1f"},
+          {"field": "status", "type": "nominal", "title": "Status"}
+        ]
+      }
+    },
+    {
+      "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
+      "mark": {"type": "text", "align": "center", "dy": -16, "fontSize": 10, "fontWeight": "bold", "color": "#333"},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "plant", "type": "nominal"}
+      }
+    }
+  ]
+}
