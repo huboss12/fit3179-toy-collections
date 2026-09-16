@@ -1,5 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Proportional symbol map of the LEGO Group's manufacturing sites",
   "width": 780,
   "height": 400,
   "title": {
@@ -16,6 +17,20 @@
       "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
       "transform": [{"filter": "datum.id != 10"}],
       "mark": {"type": "geoshape", "fill": "#ebebe7", "stroke": "#ffffff", "strokeWidth": 0.5}
+    },
+    {
+      "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
+      "transform": [
+        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? -22 : datum.lon", "as": "labLon"},
+        {"calculate": "datum.plant == 'Billund' ? 64 : datum.plant == 'Kladno' ? 55 : datum.plant == 'Nyiregyhaza' ? 46 : datum.lat", "as": "labLat"}
+      ],
+      "mark": {"type": "rule", "color": "#999", "strokeWidth": 0.6},
+      "encoding": {
+        "longitude": {"field": "labLon", "type": "quantitative"},
+        "latitude": {"field": "labLat", "type": "quantitative"},
+        "longitude2": {"field": "lon"},
+        "latitude2": {"field": "lat"}
+      }
     },
     {
       "data": {
@@ -44,7 +59,7 @@
           "type": "quantitative",
           "title": "Australia's imports (US$m)",
           "scale": {"type": "sqrt", "range": [50, 950]},
-          "legend": {"orient": "bottom-left", "values": [10, 100, 1000], "titleFontSize": 11, "labelFontSize": 10}
+          "legend": {"orient": "bottom-left", "values": [10, 100, 1000], "symbolFillColor": "#a63603", "titleFontSize": 11, "labelFontSize": 10}
         },
         "color": {
           "field": "status",
@@ -64,10 +79,15 @@
     },
     {
       "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
-      "mark": {"type": "text", "align": "center", "dy": -16, "fontSize": 10, "fontWeight": "bold", "color": "#333"},
+      "transform": [
+        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? -22 : datum.lon", "as": "labLon"},
+        {"calculate": "datum.plant == 'Billund' ? 64 : datum.plant == 'Kladno' ? 55 : datum.plant == 'Nyiregyhaza' ? 46 : datum.lat", "as": "labLat"},
+        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? 'right' : 'center'", "as": "al"}
+      ],
+      "mark": {"type": "text", "fontSize": 10, "fontWeight": "bold", "color": "#333", "dy": -14},
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
+        "longitude": {"field": "labLon", "type": "quantitative"},
+        "latitude": {"field": "labLat", "type": "quantitative"},
         "text": {"field": "plant", "type": "nominal"}
       }
     }
