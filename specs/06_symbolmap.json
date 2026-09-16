@@ -12,62 +12,46 @@
     "subtitleColor": "#555"
   },
   "projection": {"type": "naturalEarth1"},
-  "layer": [
+    "layer": [
     {
       "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
       "transform": [{"filter": "datum.id != 10"}],
       "mark": {"type": "geoshape", "fill": "#ebebe7", "stroke": "#ffffff", "strokeWidth": 0.5}
     },
     {
-      "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
-      "transform": [
-        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? -22 : datum.lon", "as": "labLon"},
-        {"calculate": "datum.plant == 'Billund' ? 64 : datum.plant == 'Kladno' ? 55 : datum.plant == 'Nyiregyhaza' ? 46 : datum.lat", "as": "labLat"}
-      ],
-      "mark": {"type": "rule", "color": "#999", "strokeWidth": 0.6},
+      "data": {"values": [
+        {"lon": 9.12124, "lat": 55.73366, "aLon": -34, "aLat": 68},
+        {"lon": 14.12089, "lat": 50.12179, "aLon": -34, "aLat": 59},
+        {"lon": 21.64923, "lat": 47.94884, "aLon": -34, "aLat": 50}
+      ]},
+      "mark": {"type": "rule", "color": "#aaa", "strokeWidth": 0.6},
       "encoding": {
-        "longitude": {"field": "labLon", "type": "quantitative"},
-        "latitude": {"field": "labLat", "type": "quantitative"},
+        "longitude": {"field": "aLon", "type": "quantitative"},
+        "latitude": {"field": "aLat", "type": "quantitative"},
         "longitude2": {"field": "lon"},
         "latitude2": {"field": "lat"}
       }
     },
     {
-      "data": {
-        "url": "data/aus_imports.csv",
-        "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
-      },
+      "data": {"url": "data/aus_imports.csv", "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}},
       "transform": [
         {"filter": "datum.Year == 2025"},
         {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "au_m"},
-        {
-          "lookup": "PartnerISO3",
-          "from": {
-            "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
-            "key": "code",
-            "fields": ["plant", "city", "lon", "lat", "status"]
-          }
-        },
+        {"lookup": "PartnerISO3",
+         "from": {"data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
+                  "key": "code", "fields": ["plant", "city", "lon", "lat", "status"]}},
         {"filter": "datum.plant != null"}
       ],
       "mark": {"type": "circle", "opacity": 0.85, "stroke": "white", "strokeWidth": 1},
       "encoding": {
         "longitude": {"field": "lon", "type": "quantitative"},
         "latitude": {"field": "lat", "type": "quantitative"},
-        "size": {
-          "field": "au_m",
-          "type": "quantitative",
-          "title": "Australia's imports (US$m)",
+        "size": {"field": "au_m", "type": "quantitative", "title": "Australia's imports (US$m)",
           "scale": {"type": "sqrt", "range": [50, 950]},
-          "legend": {"orient": "bottom-left", "values": [10, 100, 1000], "symbolFillColor": "#a63603", "titleFontSize": 11, "labelFontSize": 10}
-        },
-        "color": {
-          "field": "status",
-          "type": "nominal",
-          "title": null,
+          "legend": {"orient": "bottom-left", "values": [10, 100, 1000], "symbolFillColor": "#a63603", "titleFontSize": 11, "labelFontSize": 10}},
+        "color": {"field": "status", "type": "nominal", "title": null,
           "scale": {"domain": ["operating", "under construction"], "range": ["#a63603", "#bdbdbd"]},
-          "legend": {"orient": "bottom-left", "labelFontSize": 10}
-        },
+          "legend": {"orient": "bottom-left", "labelFontSize": 10}},
         "tooltip": [
           {"field": "plant", "type": "nominal", "title": "Plant"},
           {"field": "city", "type": "nominal", "title": "City"},
@@ -78,23 +62,35 @@
       }
     },
     {
-      "data": {"url": "data/lego_factories.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
-      "transform": [
-        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? -22 : datum.lon", "as": "labLon"},
-        {"calculate": "datum.plant == 'Billund' ? 64 : datum.plant == 'Kladno' ? 55 : datum.plant == 'Nyiregyhaza' ? 46 : datum.lat", "as": "labLat"},
-        {"calculate": "datum.plant == 'Billund' || datum.plant == 'Kladno' || datum.plant == 'Nyiregyhaza' ? 'right' : 'center'", "as": "al"}
-      ],
-      "mark": {"type": "text", "fontSize": 10, "fontWeight": "bold", "color": "#333", "dy": -14},
+      "data": {"values": [
+        {"plant": "Monterrey", "lon": -100.23023, "lat": 25.91656},
+        {"plant": "Virginia", "lon": -77.38184, "lat": 37.31131},
+        {"plant": "Jiaxing", "lon": 120.68127, "lat": 30.72863},
+        {"plant": "Binh Duong", "lon": 106.78222, "lat": 11.13227}
+      ]},
+      "mark": {"type": "text", "dy": -15, "fontSize": 10, "fontWeight": "bold", "color": "#333"},
       "encoding": {
-        "longitude": {"field": "labLon", "type": "quantitative"},
-        "latitude": {"field": "labLat", "type": "quantitative"},
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
         "text": {"field": "plant", "type": "nominal"}
       }
-    }
-        ,{
+    },
+    {
+      "data": {"values": [
+        {"aLon": -34, "aLat": 68, "t": "Billund  US$1.6m — where LEGO began"},
+        {"aLon": -34, "aLat": 59, "t": "Kladno  US$6.0m"},
+        {"aLon": -34, "aLat": 50, "t": "Nyíregyháza  US$3.0m"}
+      ]},
+      "mark": {"type": "text", "align": "right", "dx": -4, "fontSize": 10, "fontWeight": "bold", "color": "#333"},
+      "encoding": {
+        "longitude": {"field": "aLon", "type": "quantitative"},
+        "latitude": {"field": "aLat", "type": "quantitative"},
+        "text": {"field": "t", "type": "nominal"}
+      }
+    },
+    {
       "data": {"values": [
         {"lon": 14.12089, "lat": 50.12179, "aLon": 18, "aLat": 8, "t": "Czechia is the world's second-largest|toy exporter — US$3.5bn in 2024"},
-        {"lon": 9.12124, "lat": 55.73366, "aLon": -100, "aLat": 82, "t": "Where LEGO began|Now just US$1.6m to Australia"},
         {"lon": 106.78222, "lat": 11.13227, "aLon": 108, "aLat": -26, "t": "Binh Duong opened April 2025|— LEGO's sixth plant"}
       ]},
       "mark": {"type": "rule", "color": "#777", "strokeWidth": 0.7, "strokeDash": [3, 2]},
@@ -108,14 +104,13 @@
     {
       "data": {"values": [
         {"aLon": 18, "aLat": 8, "t": "Czechia is the world's second-largest|toy exporter — US$3.5bn in 2024"},
-        {"aLon": -100, "aLat": 82, "t": "Where LEGO began|Now just US$1.6m to Australia"},
         {"aLon": 108, "aLat": -26, "t": "Binh Duong opened April 2025|— LEGO's sixth plant"}
       ]},
       "mark": {"type": "text", "fontSize": 10, "lineBreak": "|", "color": "#222", "align": "center", "lineHeight": 12, "dy": 14},
       "encoding": {
         "longitude": {"field": "aLon", "type": "quantitative"},
         "latitude": {"field": "aLat", "type": "quantitative"},
-        "text": {"field": "t"}
+        "text": {"field": "t", "type": "nominal"}
       }
     }
   ]
