@@ -91,5 +91,32 @@
         "text": {"field": "plant", "type": "nominal"}
       }
     }
+        ,{
+      "data": {"values": [
+        {"lon": 14.12089, "lat": 50.12179, "aLon": 18, "aLat": 8, "t": "Czechia is the world's second-largest|toy exporter — US$3.5bn in 2024"},
+        {"lon": 9.12124, "lat": 55.73366, "aLon": -48, "aLat": 74, "t": "Where LEGO began.|Now Australia's smallest source: US$1.6m"},
+        {"lon": 106.78222, "lat": 11.13227, "aLon": 108, "aLat": -26, "t": "Binh Duong opened April 2025|— LEGO's sixth plant"}
+      ]},
+      "mark": {"type": "rule", "color": "#777", "strokeWidth": 0.7, "strokeDash": [3, 2]},
+      "encoding": {
+        "longitude": {"field": "aLon", "type": "quantitative"},
+        "latitude": {"field": "aLat", "type": "quantitative"},
+        "longitude2": {"field": "lon"},
+        "latitude2": {"field": "lat"}
+      }
+    },
+    {
+      "data": {"values": [
+        {"aLon": 18, "aLat": 8, "t": "Czechia is the world's second-largest|toy exporter — US$3.5bn in 2024"},
+        {"aLon": -48, "aLat": 74, "t": "Where LEGO began.|Now Australia's smallest source: US$1.6m"},
+        {"aLon": 108, "aLat": -26, "t": "Binh Duong opened April 2025|— LEGO's sixth plant"}
+      ]},
+      "mark": {"type": "text", "fontSize": 10, "lineBreak": "|", "color": "#222", "align": "center", "lineHeight": 12, "dy": 14},
+      "encoding": {
+        "longitude": {"field": "aLon", "type": "quantitative"},
+        "latitude": {"field": "aLat", "type": "quantitative"},
+        "text": {"field": "t"}
+      }
+    }
   ]
 }
