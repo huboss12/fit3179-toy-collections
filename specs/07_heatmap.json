@@ -77,7 +77,7 @@
         {"themeGroup": "Licensed", "decade": 2020, "t": "Star Wars, Harry Potter, Marvel"},
         {"themeGroup": "Basic", "decade": 2020, "t": "Plain brick sets almost gone"}
       ]},
-      "mark": {"type": "text", "align": "left", "dx": 26, "fontSize": 10, "fontWeight": "bold", "color": "#111"},
+      "mark": {"type": "text", "align": "left", "dx": 42, "fontSize": 10, "fontWeight": "bold", "color": "#111"},
       "encoding": {
         "x": {"field": "decade", "type": "ordinal"},
         "y": {"field": "themeGroup", "type": "nominal"},
