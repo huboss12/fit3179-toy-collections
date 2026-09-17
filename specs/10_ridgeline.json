@@ -42,8 +42,7 @@
         }
       },
       {
-        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}]}],
-        "mark": {"type": "rule", "strokeWidth": 1.4, "color": "#5c1a00", "opacity": 0.9},
+        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}, {"op": "median", "field": "pieces", "as": "medp"}]}],        "mark": {"type": "rule", "strokeWidth": 1.4, "color": "#5c1a00", "opacity": 0.9},
         "encoding": {
           "x": {"field": "medlp", "type": "quantitative"},
           "y": {"value": 40},
@@ -51,12 +50,12 @@
         }
       },
       {
-        "transform": [{"aggregate": [{"op": "median", "field": "pieces", "as": "medp"}]}],
+        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}, {"op": "median", "field": "pieces", "as": "medp"}]}],
         "mark": {"type": "text", "align": "center", "dy": -4, "fontSize": 9, "fontWeight": "bold", "color": "#5c1a00"},
         "encoding": {
-          "x": {"field": "medp", "type": "quantitative"},
-          "y": {"value": 12},
-          "text": {"field": "medp", "type": "quantitative", "format": ".0f"}
+        "x": {"field": "medlp", "type": "quantitative"},
+        "y": {"value": 12},
+        "text": {"field": "medp", "type": "quantitative", "format": ".0f"}
         }
       }
     ]
