@@ -28,7 +28,7 @@
     "height": 42,
     "layer": [
       {
-        "transform": [{"density": "lp", "extent": [0, 4], "steps": 120, "as": ["value", "density"]}],
+        "transform": [{"density": "lp", "groupby": ["decade"], "extent": [0, 4], "steps": 120, "as": ["value", "density"]}],
         "mark": {"type": "area", "interpolate": "monotone", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.8},
         "encoding": {
           "x": {
@@ -42,7 +42,8 @@
         }
       },
       {
-        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}, {"op": "median", "field": "pieces", "as": "medp"}]}],        "mark": {"type": "rule", "strokeWidth": 1.4, "color": "#5c1a00", "opacity": 0.9},
+        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}, {"op": "median", "field": "pieces", "as": "medp"}]}],
+        "mark": {"type": "rule", "strokeWidth": 1.4, "color": "#5c1a00", "opacity": 0.9},
         "encoding": {
           "x": {"field": "medlp", "type": "quantitative"},
           "y": {"value": 40},
@@ -53,9 +54,27 @@
         "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}, {"op": "median", "field": "pieces", "as": "medp"}]}],
         "mark": {"type": "text", "align": "center", "dy": -4, "fontSize": 9, "fontWeight": "bold", "color": "#5c1a00"},
         "encoding": {
-        "x": {"field": "medlp", "type": "quantitative"},
-        "y": {"value": 12},
-        "text": {"field": "medp", "type": "quantitative", "format": ".0f"}
+          "x": {"field": "medlp", "type": "quantitative"},
+          "y": {"value": 12},
+          "text": {"field": "medp", "type": "quantitative", "format": ".0f"}
+        }
+      },
+      {
+        "transform": [{"filter": "datum.decade == 2010"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
+        "encoding": {
+          "x": {"datum": 0.78, "type": "quantitative"},
+          "y": {"value": -10},
+          "text": {"value": "Polybags and|promo minis"}
+        }
+      },
+      {
+        "transform": [{"filter": "datum.decade == 2020"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
+        "encoding": {
+          "x": {"datum": 3.55, "type": "quantitative"},
+          "y": {"value": -8},
+          "text": {"value": "Largest set:|11,695 pieces"}
         }
       }
     ]
