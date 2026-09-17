@@ -1,0 +1,86 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Slope graph of LEGO factory countries' share of Australia's toy imports",
+  "width": 300,
+  "height": 380,
+  "title": {
+    "text": "Denmark didn't stop making LEGO. It stopped making it in Denmark.",
+    "subtitle": ["Share of Australia's toy imports for the seven countries where the LEGO Group manufactures,", "1995–99 average vs 2021–25 average. Log scale. Sources: LEGO Group; UN Comtrade via WITS"],
+    "anchor": "start",
+    "fontSize": 15,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "data": {
+    "url": "data/aus_imports.csv",
+    "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+  },
+  "transform": [
+    {"filter": "datum.PartnerISO3 != 'WLD'"},
+    {"calculate": "datum['TradeValue in 1000 USD']", "as": "v"},
+    {"joinaggregate": [{"op": "sum", "field": "v", "as": "yrTotal"}], "groupby": ["Year"]},
+    {"calculate": "100 * datum.v / datum.yrTotal", "as": "share"},
+    {"calculate": "datum.Year <= 1999 ? '1995-99' : (datum.Year >= 2021 ? '2021-25' : 'mid')", "as": "era"},
+    {"filter": "datum.era != 'mid'"},
+    {"filter": "indexof(['CHN','USA','DNK','MEX','VNM','CZE','HUN'], datum.PartnerISO3) >= 0"},
+    {"calculate": "datum.PartnerISO3 == 'CZE' ? 'Czechia' : datum.PartnerName", "as": "country"},
+    {"aggregate": [{"op": "mean", "field": "share", "as": "s"}], "groupby": ["country", "PartnerISO3", "era"]},
+    {"calculate": "indexof(['VNM','CZE','HUN','CHN'], datum.PartnerISO3) >= 0 ? 'gain' : 'loss'", "as": "dir"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "era",
+      "type": "ordinal",
+      "title": null,
+      "scale": {"padding": 0.4},
+      "axis": {"labelFontSize": 12, "labelFontWeight": "bold", "domain": false, "ticks": false, "orient": "top"}
+    },
+    "y": {
+      "field": "s",
+      "type": "quantitative",
+      "title": "Share of Australia's toy imports (%)",
+      "scale": {"type": "log", "domain": [0.03, 120]},
+      "axis": {"values": [0.05, 0.1, 0.5, 1, 5, 10, 50, 100], "format": "g", "grid": true, "gridColor": "#eee", "domain": false, "ticks": false}
+    },
+    "color": {
+      "field": "dir",
+      "type": "nominal",
+      "scale": {"domain": ["gain", "loss"], "range": ["#1d6fb8", "#c0392b"]},
+      "legend": null
+    },
+    "detail": {"field": "country", "type": "nominal"}
+  },
+  "layer": [
+    {"mark": {"type": "line", "strokeWidth": 2.5, "opacity": 0.85}},
+    {
+      "mark": {"type": "point", "filled": true, "size": 70},
+      "encoding": {
+        "tooltip": [
+          {"field": "country", "type": "nominal", "title": "Country"},
+          {"field": "era", "type": "ordinal", "title": "Period"},
+          {"field": "s", "type": "quantitative", "format": ".2f", "title": "Share (%)"}
+        ]
+      }
+    },
+    {
+      "transform": [
+        {"filter": "datum.era == '2021-25'"},
+        {"calculate": "datum.country + '  ' + format(datum.s, '.2f') + '%'", "as": "lbl"},
+        {"calculate": "datum.country == 'Czechia' ? datum.s * 1.7 : (datum.country == 'Denmark' ? datum.s * 0.7 : (datum.country == 'Mexico' ? datum.s * 0.7 : datum.s))", "as": "labS"}
+      ],
+      "mark": {"type": "text", "align": "left", "dx": 10, "fontSize": 10, "fontWeight": "bold"},
+      "encoding": {
+        "y": {"field": "labS", "type": "quantitative"},
+        "text": {"field": "lbl", "type": "nominal"}
+      }
+    },
+    {
+      "transform": [
+        {"filter": "datum.era == '1995-99'"},
+        {"calculate": "format(datum.s, '.2f') + '%'", "as": "lbl"}
+      ],
+      "mark": {"type": "text", "align": "right", "dx": -10, "fontSize": 10, "color": "#666"},
+      "encoding": {"text": {"field": "lbl", "type": "nominal"}}
+    }
+  ]
+}

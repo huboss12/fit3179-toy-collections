@@ -6,3 +6,4 @@ vegaEmbed('#vis5', 'specs/05_streamgraph.json', {actions: false, renderer: 'svg'
 vegaEmbed('#vis6', 'specs/06_symbolmap.json', {actions: false, renderer: 'svg'});
 vegaEmbed('#vis7', 'specs/07_heatmap.json', {actions: false, renderer: 'svg'});
 vegaEmbed('#vis8', 'specs/08_spikemap.json', {actions: false, renderer: 'svg'});
+vegaEmbed('#vis9', 'specs/09_slope.json', {actions: false, renderer: 'svg'});
