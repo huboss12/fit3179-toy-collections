@@ -5,8 +5,7 @@
   "height": 380,
   "title": {
     "text": "Five countries gained. Nineteen lost.",
-    "subtitle": "Change in share of Australia's toy imports, average of 1995–99 vs 2021–25, in percentage points. Countries changing by less than 0.3 points omitted. Source: UN Comtrade via WITS",
-    "anchor": "start",
+    "subtitle": "Change in share of Australia's toy imports, average of 1995–99 vs 2021–25, in percentage points. Countries changing by less than 0.3 points omitted; hover any marker for details. Source: UN Comtrade via WITS",    "anchor": "start",
     "fontSize": 16,
     "subtitleFontSize": 11,
     "subtitleColor": "#555"
@@ -97,9 +96,8 @@
         {"calculate": "toNumber(datum.lat) + datum.chg * 1.6", "as": "lat2"},
         {"filter": "indexof(['China','Vietnam','United States','Denmark','Hong Kong','Taiwan','Indonesia'], datum.name) >= 0"},
         {"calculate": "datum.name + ' ' + format(datum.chg, '+.1f')", "as": "lbl"},
-        {"calculate": "datum.name == 'Taiwan' ? toNumber(datum.lon) + 20 : (datum.name == 'Hong Kong' ? toNumber(datum.lon) - 26 : toNumber(datum.lon))", "as": "labLon"},
-        {"calculate": "datum.chg > 0 ? datum.lat2 + 3 : datum.lat2 - 4", "as": "labLat"}
-      ],
+        {"calculate": "datum.name == 'Taiwan' ? toNumber(datum.lon) + 22 : (datum.name == 'Hong Kong' ? toNumber(datum.lon) - 34 : (datum.name == 'Indonesia' ? toNumber(datum.lon) + 26 : (datum.name == 'Denmark' ? toNumber(datum.lon) - 30 : (datum.name == 'United States' ? toNumber(datum.lon) - 22 : toNumber(datum.lon)))))", "as": "labLon"},        
+        {"calculate": "datum.name == 'Denmark' ? toNumber(datum.lat) + 9 : (datum.name == 'United States' ? toNumber(datum.lat) + 8 : (datum.chg > 0 ? datum.lat2 + 3 : datum.lat2 - 4))", "as": "labLat"}      ],
       "mark": {"type": "text", "fontSize": 10, "fontWeight": "bold", "color": "#222", "align": "center"},
       "encoding": {
         "longitude": {"field": "labLon", "type": "quantitative"},
