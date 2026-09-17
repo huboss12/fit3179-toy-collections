@@ -72,7 +72,7 @@
         "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
         "encoding": {
           "x": {"datum": 0.78, "type": "quantitative"},
-          "y": {"value": 12},
+          "y": {"value": 6},
           "text": {"value": "Polybags and|promo minis"}
         }
       },
@@ -81,7 +81,7 @@
         "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
         "encoding": {
           "x": {"datum": 3.55, "type": "quantitative"},
-          "y": {"value": 24},
+          "y": {"value": 6},
           "text": {"value": "Largest set:|11,695 pieces"}
         }
       }
