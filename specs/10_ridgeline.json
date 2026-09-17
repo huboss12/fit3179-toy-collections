@@ -28,7 +28,10 @@
     "height": 42,
     "layer": [
       {
-        "transform": [{"density": "lp", "groupby": ["decade"], "extent": [0, 4], "steps": 120, "as": ["value", "density"]}],
+        "transform": [
+          {"density": "lp", "groupby": ["decade"], "extent": [0, 4], "steps": 120, "as": ["value", "density"]},
+          {"calculate": "pow(10, datum.value)", "as": "pieces_at"}
+        ],
         "mark": {"type": "area", "interpolate": "monotone", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.8},
         "encoding": {
           "x": {
@@ -38,7 +41,11 @@
             "axis": {"values": [0, 1, 2, 3, 4], "labelExpr": "pow(10, datum.value)", "grid": true, "gridColor": "#eee", "labelFontSize": 11}
           },
           "y": {"field": "density", "type": "quantitative", "axis": null, "scale": {"domain": [0, 1.15], "range": [40, -40]}},
-          "fill": {"field": "decade", "type": "ordinal", "legend": null, "scale": {"scheme": "oranges"}}
+          "fill": {"field": "decade", "type": "ordinal", "legend": null, "scale": {"scheme": "oranges"}},
+          "tooltip": [
+            {"field": "decade", "type": "ordinal", "title": "Decade"},
+            {"field": "pieces_at", "type": "quantitative", "title": "Pieces", "format": ".0f"}
+          ]
         }
       },
       {
@@ -47,7 +54,8 @@
         "encoding": {
           "x": {"field": "medlp", "type": "quantitative"},
           "y": {"value": 40},
-          "y2": {"value": 12}
+          "y2": {"value": 12},
+          "tooltip": [{"field": "medp", "type": "quantitative", "title": "Median pieces", "format": ".0f"}]
         }
       },
       {
@@ -64,7 +72,7 @@
         "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
         "encoding": {
           "x": {"datum": 0.78, "type": "quantitative"},
-          "y": {"value": -10},
+          "y": {"value": 6},
           "text": {"value": "Polybags and|promo minis"}
         }
       },
@@ -73,7 +81,7 @@
         "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
         "encoding": {
           "x": {"datum": 3.55, "type": "quantitative"},
-          "y": {"value": -8},
+          "y": {"value": 6},
           "text": {"value": "Largest set:|11,695 pieces"}
         }
       }
