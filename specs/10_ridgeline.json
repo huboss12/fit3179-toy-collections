@@ -71,7 +71,7 @@
         "transform": [{"filter": "datum.decade == 2010"}, {"aggregate": [{"op": "count", "as": "c"}]}],
         "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#444", "lineBreak": "|", "lineHeight": 10},
         "encoding": {
-          "x": {"datum": 0.78, "type": "quantitative"},
+          "x": {"datum": 0.5, "type": "quantitative"},
           "y": {"value": 3},
           "text": {"value": "Polybags and|promo minis"}
         }
