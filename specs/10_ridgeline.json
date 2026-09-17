@@ -1,0 +1,41 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Ridgeline plot of LEGO set piece counts by decade",
+  "width": 560,
+  "height": 42,
+  "title": {
+    "text": "LEGO sets have quadrupled in size since the 1980s",
+    "subtitle": ["Distribution of pieces per set, by decade. Median rose from 35 pieces (1980s) to 158 (2020s);", "the largest set went from 1,501 pieces to 11,695. Log scale. Source: Brickset"],
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "data": {"url": "data/lego_sets.csv", "format": {"parse": {"year": "number", "pieces": "number"}}},
+  "transform": [
+    {"filter": "datum.pieces != null && datum.pieces > 0"},
+    {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
+    {"calculate": "log(datum.pieces) / log(10)", "as": "lp"},
+    {"density": "lp", "groupby": ["decade"], "extent": [0, 4], "steps": 120, "as": ["value", "density"]}
+  ],
+  "mark": {"type": "area", "interpolate": "monotone", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.8},
+  "encoding": {
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "title": "Pieces per set",
+      "axis": {"values": [0, 1, 2, 3, 4], "labelExpr": "pow(10, datum.value)", "grid": true, "gridColor": "#eee", "labelFontSize": 11}
+    },
+    "y": {"field": "density", "type": "quantitative", "axis": null, "scale": {"range": [40, -40]}},
+    "row": {
+      "field": "decade",
+      "type": "ordinal",
+      "title": null,
+      "header": {"labelAngle": 0, "labelAlign": "left", "labelFontSize": 11, "labelFontWeight": "bold", "labelExpr": "datum.value + 's'"}
+    },
+    "fill": {"field": "decade", "type": "ordinal", "legend": null, "scale": {"scheme": "oranges"}}
+  },
+  "bounds": "flush",
+  "spacing": 0,
+  "config": {"view": {"stroke": null}}
+}
