@@ -42,7 +42,7 @@
             "fields": ["lon", "lat", "name"]
           }
         },
-        {"calculate": "datum.lat + datum.chg * 1.6", "as": "lat2"}
+        {"calculate": "toNumber(datum.lat) + datum.chg * 1.6", "as": "lat2"}
       ],
       "mark": {"type": "rule", "strokeWidth": 3, "opacity": 0.85, "strokeCap": "round"},
       "encoding": {
