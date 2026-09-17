@@ -1,0 +1,69 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Spike map of change in each country's share of Australia's toy imports",
+  "width": 780,
+  "height": 400,
+  "title": {
+    "text": "Five countries gained. Nineteen lost.",
+    "subtitle": "Change in share of Australia's toy imports, average of 1995–99 vs 2021–25, in percentage points. Countries changing by less than 0.3 points omitted. Source: UN Comtrade via WITS",
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "projection": {"type": "naturalEarth1", "rotate": [-20, 0, 0]},
+  "layer": [
+    {
+      "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
+      "transform": [{"filter": "datum.id != 10"}],
+      "mark": {"type": "geoshape", "fill": "#ececE8", "stroke": "#ffffff", "strokeWidth": 0.5}
+    },
+    {
+      "data": {
+        "url": "data/aus_imports.csv",
+        "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+      },
+      "transform": [
+        {"filter": "datum.PartnerISO3 != 'WLD'"},
+        {"calculate": "datum['TradeValue in 1000 USD']", "as": "v"},
+        {"joinaggregate": [{"op": "sum", "field": "v", "as": "yrTotal"}], "groupby": ["Year"]},
+        {"calculate": "100 * datum.v / datum.yrTotal", "as": "share"},
+        {"calculate": "datum.Year <= 1999 ? 'early' : (datum.Year >= 2021 ? 'late' : 'mid')", "as": "era"},
+        {"filter": "datum.era != 'mid'"},
+        {"aggregate": [{"op": "mean", "field": "share", "as": "s"}], "groupby": ["PartnerISO3", "PartnerName", "era"]},
+        {"pivot": "era", "value": "s", "groupby": ["PartnerISO3", "PartnerName"]},
+        {"calculate": "(datum.late == null ? 0 : datum.late) - (datum.early == null ? 0 : datum.early)", "as": "chg"},
+        {"filter": "abs(datum.chg) >= 0.3"},
+        {
+          "lookup": "PartnerISO3",
+          "from": {
+            "data": {"url": "data/country_lookup.csv", "format": {"parse": {"lon": "number", "lat": "number"}}},
+            "key": "code",
+            "fields": ["lon", "lat", "name"]
+          }
+        },
+        {"calculate": "datum.lat + datum.chg * 1.6", "as": "lat2"}
+      ],
+      "mark": {"type": "rule", "strokeWidth": 3, "opacity": 0.85, "strokeCap": "round"},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "longitude2": {"field": "lon"},
+        "latitude2": {"field": "lat2"},
+        "color": {
+          "field": "chg",
+          "type": "quantitative",
+          "title": "Change (percentage points)",
+          "scale": {"domain": [-7, 0, 19], "range": ["#c0392b", "#dddddd", "#1d6fb8"]},
+          "legend": {"orient": "bottom-left", "gradientLength": 160, "values": [-6, -3, 0, 6, 12, 18], "titleFontSize": 11, "labelFontSize": 10}
+        },
+        "tooltip": [
+          {"field": "name", "type": "nominal", "title": "Country"},
+          {"field": "early", "type": "quantitative", "title": "1995–99 share (%)", "format": ".1f"},
+          {"field": "late", "type": "quantitative", "title": "2021–25 share (%)", "format": ".1f"},
+          {"field": "chg", "type": "quantitative", "title": "Change (pts)", "format": "+.1f"}
+        ]
+      }
+    }
+  ]
+}
