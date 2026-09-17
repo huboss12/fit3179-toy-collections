@@ -1,11 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Ridgeline plot of LEGO set piece counts by decade",
-  "width": 560,
-  "height": 42,
+  "description": "Ridgeline plot of LEGO set piece counts by decade, with medians marked",
   "title": {
     "text": "LEGO sets have quadrupled in size since the 1980s",
-    "subtitle": ["Distribution of pieces per set, by decade. Median rose from 35 pieces (1980s) to 158 (2020s);", "the largest set went from 1,501 pieces to 11,695. Log scale. Source: Brickset"],
+    "subtitle": ["Distribution of pieces per set, by decade, with the median marked. Log scale.", "Source: Brickset"],
     "anchor": "start",
     "fontSize": 16,
     "subtitleFontSize": 11,
@@ -15,25 +13,53 @@
   "transform": [
     {"filter": "datum.pieces != null && datum.pieces > 0"},
     {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
-    {"calculate": "log(datum.pieces) / log(10)", "as": "lp"},
-    {"density": "lp", "groupby": ["decade"], "extent": [0, 4], "steps": 120, "as": ["value", "density"]}
+    {"calculate": "log(datum.pieces) / log(10)", "as": "lp"}
   ],
-  "mark": {"type": "area", "interpolate": "monotone", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.8},
-  "encoding": {
-    "x": {
-      "field": "value",
-      "type": "quantitative",
-      "title": "Pieces per set",
-      "axis": {"values": [0, 1, 2, 3, 4], "labelExpr": "pow(10, datum.value)", "grid": true, "gridColor": "#eee", "labelFontSize": 11}
-    },
-    "y": {"field": "density", "type": "quantitative", "axis": null, "scale": {"range": [40, -40]}},
+  "facet": {
     "row": {
       "field": "decade",
       "type": "ordinal",
       "title": null,
       "header": {"labelAngle": 0, "labelAlign": "left", "labelFontSize": 11, "labelFontWeight": "bold", "labelExpr": "datum.value + 's'"}
-    },
-    "fill": {"field": "decade", "type": "ordinal", "legend": null, "scale": {"scheme": "oranges"}}
+    }
+  },
+  "spec": {
+    "width": 560,
+    "height": 42,
+    "layer": [
+      {
+        "transform": [{"density": "lp", "extent": [0, 4], "steps": 120, "as": ["value", "density"]}],
+        "mark": {"type": "area", "interpolate": "monotone", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.8},
+        "encoding": {
+          "x": {
+            "field": "value",
+            "type": "quantitative",
+            "title": "Pieces per set",
+            "axis": {"values": [0, 1, 2, 3, 4], "labelExpr": "pow(10, datum.value)", "grid": true, "gridColor": "#eee", "labelFontSize": 11}
+          },
+          "y": {"field": "density", "type": "quantitative", "axis": null, "scale": {"domain": [0, 1.15], "range": [40, -40]}},
+          "fill": {"field": "decade", "type": "ordinal", "legend": null, "scale": {"scheme": "oranges"}}
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "median", "field": "lp", "as": "medlp"}]}],
+        "mark": {"type": "rule", "strokeWidth": 1.4, "color": "#5c1a00", "opacity": 0.9},
+        "encoding": {
+          "x": {"field": "medlp", "type": "quantitative"},
+          "y": {"value": 40},
+          "y2": {"value": 12}
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "median", "field": "pieces", "as": "medp"}]}],
+        "mark": {"type": "text", "align": "center", "dy": -4, "fontSize": 9, "fontWeight": "bold", "color": "#5c1a00"},
+        "encoding": {
+          "x": {"field": "medp", "type": "quantitative"},
+          "y": {"value": 12},
+          "text": {"field": "medp", "type": "quantitative", "format": ".0f"}
+        }
+      }
+    ]
   },
   "bounds": "flush",
   "spacing": 0,
