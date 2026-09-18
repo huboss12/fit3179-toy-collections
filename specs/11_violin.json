@@ -82,7 +82,7 @@
         "encoding": {
           "y": {"datum": 18, "type": "quantitative"},
           "x": {"value": 4},
-          "text": {"value": "Sets rated 18+ —|adults only →"}
+          "text": {"value": "These spikes are sets|rated 18+ — adults only →"}
         }
       }
     ]
