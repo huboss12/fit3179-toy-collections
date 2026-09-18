@@ -9,3 +9,4 @@ vegaEmbed('#vis8', 'specs/08_spikemap.json', {actions: false, renderer: 'svg'});
 vegaEmbed('#vis9', 'specs/09_slope.json', {actions: false, renderer: 'svg'});
 vegaEmbed('#vis10', 'specs/10_ridgeline.json', {actions: false, renderer: 'svg'});
 vegaEmbed('#vis11', 'specs/11_violin.json', {actions: false, renderer: 'svg'});
+vegaEmbed('#vis12', 'specs/12_waffle.json', {actions: false, renderer: 'svg'});

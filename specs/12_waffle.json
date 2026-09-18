@@ -1,0 +1,68 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Waffle chart of licensed themes as a share of LEGO sets, by decade",
+  "title": {
+    "text": "A third of LEGO sets now rent someone else's story",
+    "subtitle": ["Each square is 1% of the sets released that decade. 2020s covers 2020–2025 only.", "Source: Brickset"],
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "data": {"url": "data/lego_sets.csv", "format": {"parse": {"year": "number"}}},
+  "transform": [
+    {"filter": "datum.themeGroup != null && datum.themeGroup != ''"},
+    {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
+    {"calculate": "datum.themeGroup == 'Licensed' ? 1 : 0", "as": "isLic"},
+    {"aggregate": [{"op": "mean", "field": "isLic", "as": "licShare"}, {"op": "count", "as": "n"}], "groupby": ["decade"]},
+    {"calculate": "round(datum.licShare * 100)", "as": "pct"},
+    {"calculate": "sequence(0, 100)", "as": "cell"},
+    {"flatten": ["cell"]},
+    {"calculate": "floor(datum.cell / 10)", "as": "row"},
+    {"calculate": "datum.cell % 10", "as": "col"},
+    {"calculate": "datum.cell < datum.pct ? 'Licensed' : 'Original themes'", "as": "kind"}
+  ],
+  "facet": {
+    "column": {
+      "field": "decade",
+      "type": "ordinal",
+      "title": null,
+      "header": {"labelExpr": "datum.value + 's'", "labelFontSize": 11, "labelFontWeight": "bold", "labelOrient": "top"}
+    }
+  },
+  "spacing": 10,
+  "spec": {
+    "width": 84,
+    "height": 84,
+    "layer": [
+      {
+        "mark": {"type": "rect", "cornerRadius": 1},
+        "encoding": {
+          "x": {"field": "col", "type": "ordinal", "axis": null, "scale": {"paddingInner": 0.18}},
+          "y": {"field": "row", "type": "ordinal", "axis": null, "scale": {"paddingInner": 0.18, "reverse": true}},
+          "color": {
+            "field": "kind",
+            "type": "nominal",
+            "scale": {"domain": ["Licensed", "Original themes"], "range": ["#a63603", "#e8e6e1"]},
+            "legend": {"orient": "bottom", "title": null, "labelFontSize": 11, "symbolType": "square"}
+          },
+          "tooltip": [
+            {"field": "decade", "type": "ordinal", "title": "Decade"},
+            {"field": "pct", "type": "quantitative", "title": "% licensed"},
+            {"field": "n", "type": "quantitative", "title": "Sets in decade"}
+          ]
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "max", "field": "pct", "as": "p"}]}],
+        "mark": {"type": "text", "fontSize": 13, "fontWeight": "bold", "color": "#a63603", "align": "center", "baseline": "bottom", "dy": -4},
+        "encoding": {
+          "x": {"value": 42},
+          "y": {"value": 0},
+          "text": {"field": "p", "type": "quantitative", "format": ".0f"}
+        }
+      }
+    ]
+  },
+  "config": {"view": {"stroke": null}}
+}
