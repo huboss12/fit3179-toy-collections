@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Violin plot of minimum recommended age by LEGO theme group",
+  "title": {
+    "text": "Some LEGO isn't aimed at children at all",
+    "subtitle": ["Distribution of the minimum recommended age, by theme group, for sets released since 2000.", "Dots mark the median. Age ratings are recorded for only 1% of 1970s sets, so earlier decades are excluded. Source: Brickset"],
+    "anchor": "start",
+    "fontSize": 16,
+    "subtitleFontSize": 11,
+    "subtitleColor": "#555"
+  },
+  "data": {"url": "data/lego_sets.csv", "format": {"parse": {"year": "number", "agerange_min": "number"}}},
+  "transform": [
+    {"filter": "datum.agerange_min != null && datum.agerange_min >= 1 && datum.agerange_min <= 18"},
+    {"filter": "datum.year >= 2000"},
+    {"filter": "indexof(['Pre-school','Basic','Modern day','Licensed','Action/Adventure','Model making','Technical'], datum.themeGroup) >= 0"}
+  ],
+  "facet": {
+    "column": {
+      "field": "themeGroup",
+      "type": "nominal",
+      "title": null,
+      "sort": ["Pre-school", "Basic", "Modern day", "Licensed", "Action/Adventure", "Model making", "Technical"],
+      "header": {"labelOrient": "bottom", "labelPadding": 6, "labelAngle": -35, "labelAlign": "right", "labelFontSize": 10}
+    }
+  },
+  "spacing": 4,
+  "spec": {
+    "width": 72,
+    "height": 300,
+    "layer": [
+      {
+        "transform": [{"density": "agerange_min", "groupby": ["themeGroup"], "extent": [1, 19], "steps": 80, "as": ["age", "density"]}],
+        "mark": {"type": "area", "orient": "horizontal", "fillOpacity": 0.85, "stroke": "white", "strokeWidth": 0.6},
+        "encoding": {
+          "y": {
+            "field": "age",
+            "type": "quantitative",
+            "title": "Minimum recommended age",
+            "scale": {"domain": [1, 19]},
+            "axis": {"values": [2, 4, 6, 8, 10, 12, 14, 16, 18], "grid": true, "gridColor": "#eee", "labelFontSize": 11}
+          },
+          "x": {"field": "density", "type": "quantitative", "stack": "center", "impute": null, "title": null, "axis": null},
+          "color": {"field": "themeGroup", "type": "nominal", "legend": null, "scale": {"scheme": "oranges"}},
+          "tooltip": [
+            {"field": "themeGroup", "type": "nominal", "title": "Theme group"},
+            {"field": "age", "type": "quantitative", "title": "Age", "format": ".0f"}
+          ]
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "median", "field": "agerange_min", "as": "med"}, {"op": "count", "as": "n"}]}],
+        "mark": {"type": "point", "filled": true, "size": 55, "color": "#5c1a00"},
+        "encoding": {
+          "y": {"field": "med", "type": "quantitative"},
+          "tooltip": [
+            {"field": "med", "type": "quantitative", "title": "Median age"},
+            {"field": "n", "type": "quantitative", "title": "Sets"}
+          ]
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "median", "field": "agerange_min", "as": "med"}]}],
+        "mark": {"type": "text", "fontSize": 9, "fontWeight": "bold", "color": "#5c1a00", "dy": -10},
+        "encoding": {
+          "y": {"field": "med", "type": "quantitative"},
+          "text": {"field": "med", "type": "quantitative", "format": ".0f"}
+        }
+      }
+    ]
+  },
+  "config": {"view": {"stroke": null}}
+}
