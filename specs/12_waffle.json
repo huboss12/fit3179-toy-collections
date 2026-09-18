@@ -79,7 +79,7 @@
         "mark": {"type": "text", "fontSize": 9, "color": "#333", "align": "center", "lineBreak": "|", "lineHeight": 11},
         "encoding": {
           "x": {"value": 42},
-          "y": {"value": 26},
+          "y": {"value": 20},
           "text": {"value": "Marvel,|Disney,|Minecraft"}
         }
       }
