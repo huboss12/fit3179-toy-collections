@@ -54,12 +54,33 @@
         }
       },
       {
-        "transform": [{"aggregate": [{"op": "max", "field": "pct", "as": "p"}]}],
+        "transform": [
+          {"aggregate": [{"op": "max", "field": "pct", "as": "p"}]},
+          {"calculate": "format(datum.p, '.0f') + '%'", "as": "lbl"}
+        ],
         "mark": {"type": "text", "fontSize": 13, "fontWeight": "bold", "color": "#a63603", "align": "center", "baseline": "bottom", "dy": -4},
         "encoding": {
           "x": {"value": 42},
           "y": {"value": 0},
-          "text": {"field": "p", "type": "quantitative", "format": ".0f"}
+          "text": {"field": "lbl", "type": "nominal"}
+        }
+      },
+      {
+        "transform": [{"filter": "datum.decade == 1990"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "fontSize": 9, "color": "#333", "align": "center", "lineBreak": "|", "lineHeight": 11},
+        "encoding": {
+          "x": {"value": 42},
+          "y": {"value": 30},
+          "text": {"value": "Star Wars|1999"}
+        }
+      },
+      {
+        "transform": [{"filter": "datum.decade == 2020"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "fontSize": 9, "color": "#333", "align": "center", "lineBreak": "|", "lineHeight": 11},
+        "encoding": {
+          "x": {"value": 42},
+          "y": {"value": 26},
+          "text": {"value": "Marvel,|Disney,|Minecraft"}
         }
       }
     ]
