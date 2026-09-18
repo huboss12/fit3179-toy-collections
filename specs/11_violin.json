@@ -24,7 +24,7 @@
       "header": {"labelOrient": "bottom", "labelPadding": 6, "labelAngle": -35, "labelAlign": "right", "labelFontSize": 10}
     }
   },
-  "spacing": 4,
+  "spacing": 4, "resolve": {"scale": {"x": "independent"}},
   "spec": {
     "width": 72,
     "height": 300,
