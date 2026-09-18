@@ -64,4 +64,28 @@
           "y": {"field": "med", "type": "quantitative"},
           "tooltip": [
             {"field": "med", "type": "quantitative", "title": "Median age"},
-            {"field": "n", "type": "quantitative",
+            {"field": "n", "type": "quantitative", "title": "Sets"}
+          ]
+        }
+      },
+      {
+        "transform": [{"aggregate": [{"op": "median", "field": "agerange_min", "as": "med"}]}],
+        "mark": {"type": "text", "fontSize": 9, "fontWeight": "bold", "color": "#5c1a00", "dx": 14},
+        "encoding": {
+          "y": {"field": "med", "type": "quantitative"},
+          "text": {"field": "med", "type": "quantitative", "format": ".0f"}
+        }
+      },
+      {
+        "transform": [{"filter": "datum.themeGroup == 'Technical'"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#333", "lineBreak": "|", "lineHeight": 10, "dy": -6},
+        "encoding": {
+          "y": {"datum": 19.3, "type": "quantitative"},
+          "x": {"value": 36},
+          "text": {"value": "18+ sets:|adults only"}
+        }
+      }
+    ]
+  },
+  "config": {"view": {"stroke": null}}
+}
