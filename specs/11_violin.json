@@ -76,13 +76,13 @@
           "text": {"field": "med", "type": "quantitative", "format": ".0f"}
         }
       },
-      {
-        "transform": [{"filter": "datum.themeGroup == 'Technical'"}, {"aggregate": [{"op": "count", "as": "c"}]}],
-        "mark": {"type": "text", "align": "center", "fontSize": 9, "color": "#333", "lineBreak": "|", "lineHeight": 10, "dy": 4},
+            {
+        "transform": [{"filter": "datum.themeGroup == 'Basic'"}, {"aggregate": [{"op": "count", "as": "c"}]}],
+        "mark": {"type": "text", "align": "left", "fontSize": 9, "color": "#333", "lineBreak": "|", "lineHeight": 11},
         "encoding": {
-          "y": {"datum": 19.3, "type": "quantitative"},
-          "x": {"value": 36},
-          "text": {"value": "18+ sets:|adults only"}
+          "y": {"datum": 18, "type": "quantitative"},
+          "x": {"value": 4},
+          "text": {"value": "Sets rated 18+ —|adults only →"}
         }
       }
     ]
