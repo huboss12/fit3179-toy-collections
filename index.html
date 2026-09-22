@@ -1,30 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Toy Collections</title>
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The toy looks the same — Toy collections, FIT3179</title>
+  <meta name="description" content="Where Australia's toys come from, and how LEGO changed who it makes toys for. A Vega-Lite data visualisation.">
+  <meta name="author" content="Zeji Li">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<main>
-  <h1>Toy collections</h1>
-  <div id="vis1"></div>
-  <div id="vis2"></div>
-  <div id="vis3"></div>
-  <div id="vis4"></div>
-  <div id="vis5"></div>
-  <div id="vis6"></div>
-  <div id="vis7"></div>
-  <div id="vis8"></div>
-  <div id="vis9"></div>
-  <div id="vis10"></div>
-  <div id="vis11"></div>
-  <div id="vis12"></div>
+<main class="page">
+
+  <header class="hero">
+    <p class="series">Toy collections</p>
+    <h1>The toy looks the same. Almost everything behind it has changed.</h1>
+    <p class="standfirst">Australia imported US$1.42 billion of toys in 2025, and 81 cents of every dollar went to China. Beneath that one giant, the countries supplying us keep shifting — and the world's biggest toy brand has quietly changed who it makes toys for.</p>
+    <p class="byline">By Zeji Li, October 2026</p>
+  </header>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section class="chapter" aria-labelledby="s1">
+    <div class="chapter-head">
+      <span class="chapter-num" aria-hidden="true">1</span>
+      <h2 id="s1">Where the world's toys are made</h2>
+    </div>
+
+    <p class="prose">Toys are one of the most concentrated trades on Earth. In 2024 China exported US$39.9 billion of toys — 64% of the world total, and more than eleven times the next country. The runner-up is more surprising: Czechia. We'll come back to why.</p>
+
+    <figure class="chart">
+      <div id="vis1"></div>
+    </figure>
+
+    <p class="prose">Australia's own suppliers tell a similar story. China has been our biggest source of toys every year since 1995. Beneath it, the order keeps changing: the United States slid from second to fifth, while Vietnam appeared from almost nowhere to take second place.</p>
+
+    <figure class="chart">
+      <div id="vis2"></div>
+    </figure>
+
+    <p class="prose">Over thirty years the market grew about seven times, from US$199 million to US$1.42 billion. China's share climbed with it, peaking at 85% in 2018. Then it started to slip, even as Australians kept buying more.</p>
+
+    <figure class="chart">
+      <div id="vis3"></div>
+      <figcaption>Each dot is one year. Note the vertical axis starts at 55%, not zero, so the change in share is easier to see.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section class="chapter" aria-labelledby="s2">
+    <div class="chapter-head">
+      <span class="chapter-num" aria-hidden="true">2</span>
+      <h2 id="s2">How they reach Australia</h2>
+    </div>
+
+    <p class="prose">Draw every shipment as a line and almost all of them arrive from one direction. The 18 countries that each sent Australia more than US$2 million of toys in 2025 account for 98.7% of the total.</p>
+
+    <figure class="chart">
+      <div id="vis4"></div>
+    </figure>
+
+    <p class="prose">Take China out of the picture, and the rest of the supply is anything but stable. Two European countries, Denmark and Czechia, grew together through the early 2010s — then fell away at almost the same moment, just as Vietnam surged. When two countries rise and fall in lockstep, the cause is rarely the countries themselves.</p>
+
+    <figure class="chart">
+      <div id="vis5"></div>
+      <figcaption>The bands show each country's share of the non-China total. They float rather than sitting on a fixed baseline, so compare their thickness, not their height.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section class="chapter" aria-labelledby="s3">
+    <div class="chapter-head">
+      <span class="chapter-num" aria-hidden="true">3</span>
+      <h2 id="s3">The factory behind the flag</h2>
+    </div>
+
+    <p class="prose">The link is LEGO. The Danish company runs six factories, with a seventh being built in Virginia, and their locations line up with the puzzle from the first map. Czechia hosts a LEGO plant at Kladno; Hungary has another at Nyíregyháza. Denmark, where LEGO was invented, now supplies Australia with just US$1.6 million of toys a year.</p>
+
+    <figure class="chart">
+      <div id="vis6"></div>
+    </figure>
+
+    <p class="prose">What LEGO makes has changed as much as where it makes it. Through the 1970s, 80s and 90s, plain brick sets were a steady part of the range. Today they have almost disappeared, while sets built around someone else's film, game or franchise have grown to a third of everything released.</p>
+
+    <figure class="chart">
+      <div id="vis7"></div>
+    </figure>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section class="chapter" aria-labelledby="s4">
+    <div class="chapter-head">
+      <span class="chapter-num" aria-hidden="true">4</span>
+      <h2 id="s4">Winners, losers, and one company</h2>
+    </div>
+
+    <p class="prose">Compare Australia's toy imports in the late 1990s with the early 2020s and a clear pattern appears. Only five countries increased their share. Nineteen lost ground, led by the United States, Hong Kong and Denmark.</p>
+
+    <figure class="chart">
+      <div id="vis8"></div>
+    </figure>
+
+    <div class="split">
+      <figure class="chart">
+        <div id="vis9"></div>
+      </figure>
+      <div class="split-text">
+        <p>Zoom in on only the seven countries where LEGO manufactures, and the pattern sharpens. Denmark's share of Australia's toy imports fell from 3.3% to 0.35%. Vietnam's rose from 0.15% to 6.8%. Czechia and Hungary each grew roughly tenfold.</p>
+        <p class="pull">Denmark didn't stop making LEGO. It stopped making it in Denmark.</p>
+        <p class="note">This chart uses a log scale: each gridline is ten times the one below, so very small and very large shares can sit on the same chart. China rises too, but LEGO is only a small part of China's much larger toy industry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section class="chapter" aria-labelledby="s5">
+    <div class="chapter-head">
+      <span class="chapter-num" aria-hidden="true">5</span>
+      <h2 id="s5">Who is it really for?</h2>
+    </div>
+
+    <p class="prose">The sets themselves have grown. The typical LEGO set of the 1980s had 35 pieces. In the 2020s it has 158, and the biggest now runs to more than 11,000.</p>
+
+    <figure class="chart">
+      <div id="vis10"></div>
+      <figcaption>Each curve shows how set sizes are spread across that decade: the taller the curve, the more sets of that size. The line marks the middle set.</figcaption>
+    </figure>
+
+    <p class="prose">Bigger sets have brought older buyers. Pre-school sets are aimed at two-year-olds, while technical and model-making sets sit around nine and stretch all the way to adults. In the whole of the 2010s, LEGO released one set rated 18+. In the 2020s so far, it has released 385.</p>
+
+    <figure class="chart">
+      <div id="vis11"></div>
+    </figure>
+
+    <p class="prose">More of those sets also borrow their story. Star Wars became LEGO's first licensed theme in 1999, with 13 sets. By the 2020s, a third of everything LEGO released carried someone else's brand.</p>
+
+    <figure class="chart">
+      <div id="vis12"></div>
+    </figure>
+  </section>
+
+  <section class="closing" aria-label="Conclusion">
+    <p>A child in 1985 might have unwrapped a 35-piece box made in Denmark. An adult in 2025 is more likely to buy a 158-piece set tied to a film franchise, made in China or Vietnam. The toy looks much the same. Almost everything behind it has changed.</p>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="colophon">
+    <h2>About this visualisation</h2>
+
+    <div class="colophon-grid">
+      <div>
+        <h3>Data sources</h3>
+        <ul>
+          <li><strong>Toy trade:</strong> UN Comtrade, accessed via World Integrated Trade Solution (WITS), World Bank. HS 1988/92 heading 9503 (toys). Australia's imports by partner, 1995–2025; world exports by reporter, 2024. <a href="https://wits.worldbank.org/">wits.worldbank.org</a></li>
+          <li><strong>LEGO sets:</strong> Brickset <code>legosets</code> dataset, 1970–2025, via the <code>brickset</code> R package by Jason Bryer. <a href="https://jbryer.github.io/brickset/">jbryer.github.io/brickset</a>; original data <a href="https://brickset.com/">brickset.com</a></li>
+          <li><strong>LEGO factory locations:</strong> The LEGO Group, Locations. <a href="https://www.lego.com/en-us/aboutus/lego-group/contact/locations">lego.com</a>. Coordinates from Google Maps.</li>
+          <li><strong>Country boundaries:</strong> Natural Earth 1:110m, via the Vega datasets. <a href="https://www.naturalearthdata.com/">naturalearthdata.com</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Notes</h3>
+        <ul>
+          <li>Trade values are in US dollars, not adjusted for inflation.</li>
+          <li>“Taiwan” appears in UN Comtrade as “Other Asia, nes”.</li>
+          <li>The 2020s covers 2020–2025 only.</li>
+          <li>Age ratings are recorded for only a small share of pre-2000 sets, so the age chart covers 2000 onwards.</li>
+          <li>“Miscellaneous” is Brickset's own catch-all category.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="credits">
+      <p><strong>Author:</strong> Zeji Li, Monash University. Created for FIT3179 Data Visualisation, Semester 2, 2026.</p>
+      <p><strong>Use of AI:</strong> Claude (Anthropic) was used to help plan the structure, write and debug the Vega-Lite specifications, and draft and edit the text. All data, findings and design decisions were checked by the author.</p>
+      <p><strong>Built with:</strong> <a href="https://vega.github.io/vega-lite/">Vega-Lite</a>. Typefaces: Bricolage Grotesque and Atkinson Hyperlegible, via Google Fonts. <a href="sketch/sketch.pdf">Design sketch (PDF)</a></p>
+    </div>
+  </footer>
+
 </main>
+
 <script src="js/main.js"></script>
 </body>
 </html>
