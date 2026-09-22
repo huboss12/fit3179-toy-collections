@@ -1,10 +1,14 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Streamgraph of Australia's non-China toy import sources. Click a legend item to highlight one country.",
   "width": 720,
   "height": 340,
   "title": {
     "text": "Behind China, the suppliers keep changing",
-    "subtitle": "Australia's toy imports excluding China, by source country. Non-China imports grew from US$78m (1995) to US$271m (2025). Source: UN Comtrade via WITS",
+    "subtitle": [
+      "Australia's toy imports excluding China, by source country. Non-China imports grew from US$78m (1995) to US$271m (2025).",
+      "Click a country in the legend to highlight it; click again or double-click to reset. Source: UN Comtrade via WITS"
+    ],
     "anchor": "start",
     "fontSize": 16,
     "subtitleFontSize": 11,
@@ -12,74 +16,268 @@
   },
   "data": {
     "url": "data/aus_imports.csv",
-    "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+    "format": {
+      "parse": {
+        "Year": "number",
+        "TradeValue in 1000 USD": "number"
+      }
+    }
   },
   "transform": [
-    {"filter": "datum.PartnerISO3 != 'WLD' && datum.PartnerISO3 != 'CHN'"},
-    {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "value_m"},
-    {"calculate": "datum.PartnerName == 'Other Asia, nes' ? 'Taiwan' : datum.PartnerName == 'Hong Kong, China' ? 'Hong Kong' : datum.PartnerName == 'Czech Republic' ? 'Czechia' : datum.PartnerName", "as": "country"},
-    {"calculate": "indexof(['Vietnam','Denmark','United States','Hong Kong','Taiwan','Indonesia','Thailand','Czechia','Germany'], datum.country) >= 0 ? datum.country : 'All others'", "as": "src"},
-    {"aggregate": [{"op": "sum", "field": "value_m", "as": "m"}], "groupby": ["Year", "src"]},
-    {"calculate": "indexof(['Vietnam','Indonesia','Thailand','United States','Hong Kong','Taiwan','Czechia','Denmark','Germany','All others'], datum.src)", "as": "ord"},
-    {"stack": "m", "groupby": ["Year"], "sort": [{"field": "ord", "order": "ascending"}], "offset": "center", "as": ["y0", "y1"]},
-    {"calculate": "(datum.y0 + datum.y1) / 2", "as": "ymid"}
+    {
+      "filter": "datum.PartnerISO3 != 'WLD' && datum.PartnerISO3 != 'CHN'"
+    },
+    {
+      "calculate": "datum['TradeValue in 1000 USD'] / 1000",
+      "as": "value_m"
+    },
+    {
+      "calculate": "datum.PartnerName == 'Other Asia, nes' ? 'Taiwan' : datum.PartnerName == 'Hong Kong, China' ? 'Hong Kong' : datum.PartnerName == 'Czech Republic' ? 'Czechia' : datum.PartnerName",
+      "as": "country"
+    },
+    {
+      "calculate": "indexof(['Vietnam','Denmark','United States','Hong Kong','Taiwan','Indonesia','Thailand','Czechia','Germany'], datum.country) >= 0 ? datum.country : 'All others'",
+      "as": "src"
+    },
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "value_m",
+          "as": "m"
+        }
+      ],
+      "groupby": [
+        "Year",
+        "src"
+      ]
+    },
+    {
+      "calculate": "indexof(['Vietnam','Indonesia','Thailand','United States','Hong Kong','Taiwan','Czechia','Denmark','Germany','All others'], datum.src)",
+      "as": "ord"
+    },
+    {
+      "stack": "m",
+      "groupby": [
+        "Year"
+      ],
+      "sort": [
+        {
+          "field": "ord",
+          "order": "ascending"
+        }
+      ],
+      "offset": "center",
+      "as": [
+        "y0",
+        "y1"
+      ]
+    },
+    {
+      "calculate": "(datum.y0 + datum.y1) / 2",
+      "as": "ymid"
+    }
   ],
   "layer": [
     {
-      "mark": {"type": "area", "interpolate": "monotone", "stroke": "white", "strokeWidth": 0.4},
+      "params": [
+        {
+          "name": "pick",
+          "select": {
+            "type": "point",
+            "fields": [
+              "src"
+            ]
+          },
+          "bind": "legend"
+        }
+      ],
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone",
+        "stroke": "white",
+        "strokeWidth": 0.4
+      },
       "encoding": {
         "x": {
           "field": "Year",
           "type": "quantitative",
           "title": null,
-          "scale": {"domain": [1995, 2025], "nice": false},
-          "axis": {"format": "d", "grid": false, "domain": false, "tickCount": 7, "labelFontSize": 11}
+          "scale": {
+            "domain": [
+              1995,
+              2025
+            ],
+            "nice": false
+          },
+          "axis": {
+            "format": "d",
+            "grid": false,
+            "domain": false,
+            "tickCount": 7,
+            "labelFontSize": 11
+          }
         },
-        "y": {"field": "y0", "type": "quantitative", "title": null, "axis": null, "scale": {"domain": [-20, 300]}},
-        "y2": {"field": "y1"},
+        "y": {
+          "field": "y0",
+          "type": "quantitative",
+          "title": null,
+          "axis": null,
+          "scale": {
+            "domain": [
+              -20,
+              300
+            ]
+          }
+        },
+        "y2": {
+          "field": "y1"
+        },
         "color": {
           "field": "src",
           "type": "nominal",
           "title": "Source",
           "scale": {
-            "domain": ["Vietnam", "Indonesia", "Thailand", "United States", "Hong Kong", "Taiwan", "Czechia", "Denmark", "Germany", "All others"],
-            "range": ["#1d9e75", "#b45cb0", "#e8a33d", "#c9a227", "#8c6bb1", "#9ecae1", "#6baed6", "#185fa5", "#bdbdbd", "#d9d9d9"]
+            "domain": [
+              "Vietnam",
+              "Indonesia",
+              "Thailand",
+              "United States",
+              "Hong Kong",
+              "Taiwan",
+              "Czechia",
+              "Denmark",
+              "Germany",
+              "All others"
+            ],
+            "range": [
+              "#1d9e75",
+              "#b45cb0",
+              "#e8a33d",
+              "#c9a227",
+              "#8c6bb1",
+              "#9ecae1",
+              "#6baed6",
+              "#185fa5",
+              "#bdbdbd",
+              "#d9d9d9"
+            ]
           },
-          "legend": {"orient": "right", "labelFontSize": 10, "symbolType": "square", "titleFontSize": 11}
+          "legend": {
+            "orient": "right",
+            "labelFontSize": 10,
+            "symbolType": "square",
+            "titleFontSize": 11
+          }
+        },
+        "opacity": {
+          "condition": {
+            "param": "pick",
+            "value": 1
+          },
+          "value": 0.18
         },
         "tooltip": [
-          {"field": "src", "type": "nominal", "title": "Source"},
-          {"field": "Year", "type": "quantitative", "format": "d"},
-          {"field": "m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
+          {
+            "field": "src",
+            "type": "nominal",
+            "title": "Source"
+          },
+          {
+            "field": "Year",
+            "type": "quantitative",
+            "format": "d"
+          },
+          {
+            "field": "m",
+            "type": "quantitative",
+            "title": "US$ million",
+            "format": ",.0f"
+          }
         ]
       }
     },
     {
       "transform": [
-        {"filter": "(datum.src == 'Denmark' && datum.Year == 2013) || (datum.src == 'Vietnam' && datum.Year == 2022)"},
-        {"calculate": "datum.src == 'Denmark' ? 285 : -8", "as": "labelY"},
-        {"calculate": "datum.src == 'Denmark' ? 2006 : 2018", "as": "labelX"},
-        {"calculate": "datum.src == 'Denmark' ? '#185fa5' : '#1d9e75'", "as": "lc"}
+        {
+          "filter": "(datum.src == 'Denmark' && datum.Year == 2013) || (datum.src == 'Vietnam' && datum.Year == 2022)"
+        },
+        {
+          "calculate": "datum.src == 'Denmark' ? 285 : -8",
+          "as": "labelY"
+        },
+        {
+          "calculate": "datum.src == 'Denmark' ? 2006 : 2018",
+          "as": "labelX"
+        },
+        {
+          "calculate": "datum.src == 'Denmark' ? '#185fa5' : '#1d9e75'",
+          "as": "lc"
+        }
       ],
-      "mark": {"type": "rule", "strokeWidth": 1.2},
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.2
+      },
       "encoding": {
-        "x": {"field": "labelX", "type": "quantitative"},
-        "y": {"field": "labelY", "type": "quantitative"},
-        "x2": {"field": "Year"},
-        "y2": {"field": "ymid"},
-        "color": {"field": "lc", "type": "nominal", "scale": null, "legend": null}
+        "x": {
+          "field": "labelX",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "labelY",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "Year"
+        },
+        "y2": {
+          "field": "ymid"
+        },
+        "color": {
+          "field": "lc",
+          "type": "nominal",
+          "scale": null,
+          "legend": null
+        }
       }
     },
     {
-      "data": {"values": [
-        {"x": 2006, "y": 285, "t": "Denmark and Czechia peak|— LEGO's European plants"},
-        {"x": 2018, "y": -8, "t": "Vietnam arrives|from nothing"}
-      ]},
-      "mark": {"type": "text", "fontSize": 10.5, "fontWeight": "bold", "lineBreak": "|", "color": "#222", "align": "center", "lineHeight": 13},
+      "data": {
+        "values": [
+          {
+            "x": 2006,
+            "y": 285,
+            "t": "Denmark and Czechia peak|— LEGO's European plants"
+          },
+          {
+            "x": 2018,
+            "y": -8,
+            "t": "Vietnam arrives|from nothing"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 10.5,
+        "fontWeight": "bold",
+        "lineBreak": "|",
+        "color": "#222",
+        "align": "center",
+        "lineHeight": 13
+      },
       "encoding": {
-        "x": {"field": "x", "type": "quantitative"},
-        "y": {"field": "y", "type": "quantitative"},
-        "text": {"field": "t"}
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
       }
     }
   ]
