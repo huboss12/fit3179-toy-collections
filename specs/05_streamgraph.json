@@ -36,7 +36,7 @@
       "as": "country"
     },
     {
-      "calculate": "indexof(['Vietnam','Denmark','United States','Hong Kong','Taiwan','Indonesia','Thailand','Czechia','Germany'], datum.country) >= 0 ? datum.country : 'All others'",
+      "calculate": "indexof(['Vietnam','Denmark','United States','Hong Kong','Taiwan','Indonesia','Thailand','Czechia','Germany'], datum.country) >= 0 ? datum.country : 'All other countries'",
       "as": "src"
     },
     {
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "calculate": "indexof(['Vietnam','Indonesia','Thailand','United States','Hong Kong','Taiwan','Czechia','Denmark','Germany','All others'], datum.src)",
+      "calculate": "indexof(['Vietnam','Indonesia','Thailand','United States','Hong Kong','Taiwan','Czechia','Denmark','Germany','All other countries'], datum.src)",
       "as": "ord"
     },
     {
@@ -148,7 +148,7 @@
               "Czechia",
               "Denmark",
               "Germany",
-              "All others"
+              "All other countries"
             ],
             "range": [
               "#1d9e75",
@@ -277,6 +277,34 @@
         },
         "text": {
           "field": "t"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.src == 'All other countries' && datum.Year == 2000"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 10.5,
+        "fontStyle": "italic",
+        "color": "#555",
+        "align": "center",
+        "baseline": "middle"
+      },
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "ymid",
+          "type": "quantitative"
+        },
+        "text": {
+          "value": "All other countries (50–70 smaller suppliers)"
         }
       }
     }

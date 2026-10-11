@@ -9,79 +9,697 @@
     "fontSize": 16,
     "subtitleFontSize": 11
   },
-  "projection": {"type": "naturalEarth1", "rotate": [-120, 0, 0]},
+  "projection": {
+    "type": "naturalEarth1",
+    "rotate": [
+      -120,
+      0,
+      0
+    ]
+  },
   "layer": [
     {
-      "data": {"url": "data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}},
-      "transform": [{"filter": "datum.id != 10"}],
-      "mark": {"type": "geoshape", "fill": "#ebebe7", "stroke": "#ffffff", "strokeWidth": 0.5}
+      "data": {
+        "url": "data/world-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id != 10"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#ebebe7",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.5
+      }
     },
     {
       "data": {
         "url": "data/aus_imports.csv",
-        "format": {"parse": {"Year": "number", "TradeValue in 1000 USD": "number"}}
+        "format": {
+          "parse": {
+            "Year": "number",
+            "TradeValue in 1000 USD": "number"
+          }
+        }
       },
       "transform": [
-        {"filter": "datum.Year == 2025"},
-        {"filter": "datum.PartnerISO3 != 'WLD' && datum.PartnerISO3 != 'AUS'"},
-        {"calculate": "datum['TradeValue in 1000 USD'] / 1000", "as": "value_m"},
-        {"filter": "datum.value_m >= 2"},
+        {
+          "filter": "datum.Year == 2025"
+        },
+        {
+          "filter": "datum.PartnerISO3 != 'WLD' && datum.PartnerISO3 != 'AUS'"
+        },
+        {
+          "calculate": "datum['TradeValue in 1000 USD'] / 1000",
+          "as": "value_m"
+        },
+        {
+          "filter": "datum.value_m >= 2"
+        },
         {
           "lookup": "PartnerISO3",
           "from": {
             "data": {
               "url": "data/country_lookup.csv",
-              "format": {"parse": {"lon": "number", "lat": "number"}}
+              "format": {
+                "parse": {
+                  "lon": "number",
+                  "lat": "number"
+                }
+              }
             },
             "key": "code",
-            "fields": ["lon", "lat", "name"]
+            "fields": [
+              "lon",
+              "lat",
+              "name"
+            ]
           }
         },
-        {"calculate": "134.376", "as": "auLon"},
-        {"calculate": "-25.561", "as": "auLat"}
+        {
+          "calculate": "134.376",
+          "as": "auLon"
+        },
+        {
+          "calculate": "-25.561",
+          "as": "auLat"
+        },
+        {
+          "calculate": "toNumber(datum.lon) < -60 ? toNumber(datum.lon) + 360 : toNumber(datum.lon)",
+          "as": "lon0"
+        },
+        {
+          "calculate": "datum.PartnerISO3 == 'CHN' ? 0.2 : indexof(['VNM','THA','IND','BGD','IDN'], datum.PartnerISO3) >= 0 ? -0.25 : datum.lon0 < 60 ? -0.36 : 0.32",
+          "as": "bend"
+        },
+        {
+          "calculate": "(datum.lon0 + datum.auLon) / 2 - (datum.auLat - toNumber(datum.lat)) * datum.bend",
+          "as": "cLon"
+        },
+        {
+          "calculate": "(toNumber(datum.lat) + datum.auLat) / 2 + (datum.auLon - datum.lon0) * datum.bend",
+          "as": "cLat"
+        },
+        {
+          "calculate": "1 - 9 / sqrt(pow(datum.auLon - datum.lon0, 2) + pow(datum.auLat - toNumber(datum.lat), 2))",
+          "as": "tEnd"
+        },
+        {
+          "calculate": "sequence(0, 1.001, 0.02)",
+          "as": "ts"
+        },
+        {
+          "flatten": [
+            "ts"
+          ],
+          "as": [
+            "t"
+          ]
+        },
+        {
+          "filter": "datum.t <= datum.tEnd"
+        },
+        {
+          "calculate": "pow(1-datum.t,2)*datum.lon0 + 2*(1-datum.t)*datum.t*datum.cLon + pow(datum.t,2)*datum.auLon",
+          "as": "pLon"
+        },
+        {
+          "calculate": "pow(1-datum.t,2)*toNumber(datum.lat) + 2*(1-datum.t)*datum.t*datum.cLat + pow(datum.t,2)*datum.auLat",
+          "as": "pLat"
+        }
       ],
-      "mark": {"type": "rule", "color": "#a63603", "opacity": 0.55, "strokeCap": "round"},
-      "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
-        "longitude2": {"field": "auLon"},
-        "latitude2": {"field": "auLat"},
-        "strokeWidth": {
-          "field": "value_m",
-          "type": "quantitative",
-          "scale": {"type": "sqrt", "range": [0.8, 14]},
-          "legend": {
-            "title": "Imports (US$m)",
-            "orient": "bottom-left",
-            "direction": "horizontal",
-            "symbolType": "stroke",
-            "values": [10, 100, 500, 1000],
-            "titleFontSize": 11,
-            "labelFontSize": 10
-          }
+      "layer": [
+        {
+          "transform": [
+            {
+              "filter": "datum.PartnerISO3 == 'CHN'"
+            }
+          ],
+          "mark": {
+            "type": "line",
+            "color": "#a63603",
+            "opacity": 0.45,
+            "strokeCap": "round",
+            "interpolate": "linear"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "pLon",
+              "type": "quantitative"
             },
-        "tooltip": [
-          {"field": "name", "type": "nominal", "title": "From"},
-          {"field": "value_m", "type": "quantitative", "title": "US$ million", "format": ",.0f"}
+            "latitude": {
+              "field": "pLat",
+              "type": "quantitative"
+            },
+            "detail": {
+              "field": "PartnerISO3"
+            },
+            "order": {
+              "field": "t",
+              "type": "quantitative"
+            },
+            "strokeWidth": {
+              "field": "value_m",
+              "type": "quantitative",
+              "scale": {
+                "type": "sqrt",
+                "range": [
+                  0.8,
+                  14
+                ]
+              },
+              "legend": {
+                "title": "Imports (US$m)",
+                "orient": "bottom-left",
+                "direction": "horizontal",
+                "symbolType": "stroke",
+                "values": [
+                  10,
+                  100,
+                  500,
+                  1000
+                ],
+                "titleFontSize": 11,
+                "labelFontSize": 10
+              }
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "From"
+              },
+              {
+                "field": "value_m",
+                "type": "quantitative",
+                "title": "US$ million",
+                "format": ",.0f"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.PartnerISO3 != 'CHN'"
+            }
+          ],
+          "mark": {
+            "type": "line",
+            "color": "#a63603",
+            "opacity": 0.7,
+            "strokeCap": "round",
+            "interpolate": "linear"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "pLon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "pLat",
+              "type": "quantitative"
+            },
+            "detail": {
+              "field": "PartnerISO3"
+            },
+            "order": {
+              "field": "t",
+              "type": "quantitative"
+            },
+            "strokeWidth": {
+              "field": "value_m",
+              "type": "quantitative",
+              "scale": {
+                "type": "sqrt",
+                "range": [
+                  0.8,
+                  14
+                ]
+              },
+              "legend": null
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "From"
+              },
+              {
+                "field": "value_m",
+                "type": "quantitative",
+                "title": "US$ million",
+                "format": ",.0f"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 134.376,
+            "lat": -25.561
+          }
         ]
+      },
+      "mark": {
+        "type": "circle",
+        "size": 860,
+        "fillOpacity": 0,
+        "stroke": "#5c1a00",
+        "strokeWidth": 1.2,
+        "strokeDash": [
+          2,
+          2
+        ]
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        }
       }
     },
     {
-      "data": {"values": [{"lon": 134.376, "lat": -25.561}]},
-      "mark": {"type": "point", "filled": true, "size": 90, "color": "#5c1a00"},
+      "data": {
+        "values": [
+          {
+            "lon": 134.376,
+            "lat": -25.561,
+            "t": "Australia"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 10,
+        "fontWeight": "bold",
+        "color": "#5c1a00",
+        "dy": 26
+      },
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"}
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 103.865,
+            "lat": 36.609,
+            "label": "China: 81% of Australia's toy imports"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 4,
+        "dy": -16,
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#f7f8f6",
+        "stroke": "#f7f8f6",
+        "strokeWidth": 3.5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 103.865,
+            "lat": 36.609,
+            "label": "China: 81% of Australia's toy imports"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 4,
+        "dy": -16,
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#5c1a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 106.3,
+            "lat": 16.7,
+            "t": "Vietnam US$129m",
+            "a": "right",
+            "dx": -6,
+            "dy": -8
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -6,
+        "dy": -8,
+        "fontSize": 10,
+        "color": "#f7f8f6",
+        "stroke": "#f7f8f6",
+        "strokeWidth": 3.5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 106.3,
+            "lat": 16.7,
+            "t": "Vietnam US$129m",
+            "a": "right",
+            "dx": -6,
+            "dy": -8
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -6,
+        "dy": -8,
+        "fontSize": 10,
+        "color": "#5c1a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 101.0,
+            "lat": 15.0,
+            "t": "Thailand US$21m",
+            "a": "right",
+            "dx": -6,
+            "dy": 6
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -6,
+        "dy": 6,
+        "fontSize": 10,
+        "color": "#f7f8f6",
+        "stroke": "#f7f8f6",
+        "strokeWidth": 3.5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 101.0,
+            "lat": 15.0,
+            "t": "Thailand US$21m",
+            "a": "right",
+            "dx": -6,
+            "dy": 6
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -6,
+        "dy": 6,
+        "fontSize": 10,
+        "color": "#5c1a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": -99.1,
+            "lat": 39.5,
+            "t": "United States US$11m",
+            "a": "center",
+            "dx": 0,
+            "dy": -10
+          },
+          {
+            "lon": 12.0,
+            "lat": 56.5,
+            "t": "Hungary, Italy (US$2–6m each)",
+            "a": "center",
+            "dx": 0,
+            "dy": -10
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dx": 0,
+        "dy": -10,
+        "fontSize": 10,
+        "color": "#f7f8f6",
+        "stroke": "#f7f8f6",
+        "strokeWidth": 3.5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": -99.1,
+            "lat": 39.5,
+            "t": "United States US$11m",
+            "a": "center",
+            "dx": 0,
+            "dy": -10
+          },
+          {
+            "lon": 12.0,
+            "lat": 56.5,
+            "t": "Hungary, Italy (US$2–6m each)",
+            "a": "center",
+            "dx": 0,
+            "dy": -10
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dx": 0,
+        "dy": -10,
+        "fontSize": 10,
+        "color": "#5c1a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 12.0,
+            "lat": 56.5,
+            "t": "Europe: Czechia, UK, Germany,",
+            "a": "center",
+            "dx": 0,
+            "dy": -22
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dx": 0,
+        "dy": -22,
+        "fontSize": 10,
+        "color": "#f7f8f6",
+        "stroke": "#f7f8f6",
+        "strokeWidth": 3.5,
+        "strokeJoin": "round"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 12.0,
+            "lat": 56.5,
+            "t": "Europe: Czechia, UK, Germany,",
+            "a": "center",
+            "dx": 0,
+            "dy": -22
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "dx": 0,
+        "dy": -22,
+        "fontSize": 10,
+        "color": "#5c1a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "t"
+        }
       }
     }
-    ,{
-  "data": {"values": [{"lon": 103.865, "lat": 36.609, "label": "China: 81% of Australia's toy imports"}]},
-  "mark": {"type": "text", "align": "left", "dx": 12, "dy": -8, "fontSize": 11, "fontWeight": "bold", "color": "#5c1a00"},
-  "encoding": {
-    "longitude": {"field": "lon", "type": "quantitative"},
-    "latitude": {"field": "lat", "type": "quantitative"},
-    "text": {"field": "label"}
-  }
-}
   ]
 }
