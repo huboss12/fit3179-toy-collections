@@ -138,6 +138,52 @@
         {
           "transform": [
             {
+              "filter": "datum.PartnerISO3 != 'CHN'"
+            }
+          ],
+          "mark": {
+            "type": "line",
+            "color": "#a63603",
+            "opacity": 0.001,
+            "strokeWidth": 10,
+            "strokeCap": "round",
+            "interpolate": "linear",
+            "cursor": "pointer"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "pLon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "pLat",
+              "type": "quantitative"
+            },
+            "detail": {
+              "field": "PartnerISO3"
+            },
+            "order": {
+              "field": "t",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "From"
+              },
+              {
+                "field": "value_m",
+                "type": "quantitative",
+                "title": "US$ million",
+                "format": ",.0f"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
               "filter": "datum.PartnerISO3 == 'CHN'"
             }
           ],
@@ -146,7 +192,8 @@
             "color": "#a63603",
             "opacity": 0.45,
             "strokeCap": "round",
-            "interpolate": "linear"
+            "interpolate": "linear",
+            "cursor": "pointer"
           },
           "encoding": {
             "longitude": {
@@ -215,7 +262,8 @@
             "color": "#a63603",
             "opacity": 0.7,
             "strokeCap": "round",
-            "interpolate": "linear"
+            "interpolate": "linear",
+            "cursor": "pointer"
           },
           "encoding": {
             "longitude": {
